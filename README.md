@@ -1,2 +1,2 @@
 # CatOps
-.Highly trained cats for managing servers.
+Highly trained cats for managing servers.
