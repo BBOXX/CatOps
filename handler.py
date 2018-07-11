@@ -2,9 +2,9 @@ from catops import dispatch
 import json
 
 
-def endpoint(event, context):
+def execute(params):
     try:
-        s = dispatch(['meow', 'hi'])
+        s = dispatch(params)
     except Exception as err:
         s = str(err)
 
@@ -15,5 +15,11 @@ def endpoint(event, context):
 
     return response
 
+
+def endpoint(event, context):
+    return execute(event['command'])
+
+
 if __name__=="__main__":
-    print(endpoint('',''))
+    event = {'command':['meow', 'hi']}
+    print(endpoint(event,''))
