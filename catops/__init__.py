@@ -1,1 +1,1 @@
-from .dd import dispatch
+from .dispatcher import dispatch
