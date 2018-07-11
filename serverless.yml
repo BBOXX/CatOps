@@ -1,0 +1,14 @@
+service: CatOps
+
+provider:
+  name: aws
+  runtime: python3.6
+  profile: serverless
+
+functions:
+  dispatcher:
+    handler: handler.endpoint
+    events:
+      - http:
+          path: ping
+          method: get
