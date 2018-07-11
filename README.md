@@ -1,6 +1,28 @@
 # CatOps
 Highly trained cats for managing servers.
 
+## Table of Contents
+
+## Features
+
+- Completely NoOps. 
+- Easily add commands.
+- Pay per invokation.
+- Provider agnostic.
+
+## Example
+
+## FAQ
+
+## Installation
+
+### Install node
+https://www.metachris.com/2017/01/how-to-install-nodejs-6-lts-on-ubuntu-and-centos/
+
+### Install serverless
+
+
+# Old readme
 For now, research on implementing an event-driven, serverless ChatOps integration (for Slack) that is capable of managing DevOps.
 
 ## Why

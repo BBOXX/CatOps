@@ -20,8 +20,6 @@ def load_plugins(plugin_dir='plugins'):
 
 
 class Dispatcher(object):
-    argv = None
-
     def __init__(self):
         logger.info('Loading plugins...')
         plugins, functions = load_plugins()
@@ -31,7 +29,7 @@ class Dispatcher(object):
         logger.info('Plugins loaded.\n')
 
     def parse_commmand(self, text):
-        self.argv = text.split()
+        argv = text.split()
 
         parser = ThrowingParser(
             usage='''
@@ -41,7 +39,7 @@ class Dispatcher(object):
                    {0} 
             '''.format("\n".join(functions.keys())))
         parser.add_argument('command', help='Subcommand to run')
-        args = parser.parse_args(self.argv[1:2])
+        args = parser.parse_args(argv[1:2])
         if not hasattr(self, args.command):
             print('Unrecognized command')
             parser.print_help()
@@ -50,7 +48,8 @@ class Dispatcher(object):
         return getattr(self, args.command)(self)
 
 def dispatch(argv=sys.argv):
-    Dispatcher(" ".join(argv))
+    d = Dispatcher()
+    return d.parse_command(" ".join(argv))
 
 if __name__ == '__main__':
     dispatch()

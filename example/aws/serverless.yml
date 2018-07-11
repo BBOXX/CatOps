@@ -1,16 +1,17 @@
 service: CatOps
 
 package:
-  exclude:
-    - ./**
   include:
     - handler.py
     - plugins/**
-    - catops/*
+
+custom:
+  pythonRequirements:
+    slim: true
 
 provider:
   name: aws
-  runtime: python3.6
+  runtime: python3
   profile: serverless
 
 functions:
@@ -20,3 +21,6 @@ functions:
       - http:
           path: ping
           method: get
+
+plugins:
+  - serverless-python-requirements
