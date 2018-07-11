@@ -1,5 +1,13 @@
 service: CatOps
 
+package:
+  exclude:
+    - ./**
+  include:
+    - handler.py
+    - plugins/**
+    - catops/*
+
 provider:
   name: aws
   runtime: python3.6
