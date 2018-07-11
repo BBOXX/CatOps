@@ -2,7 +2,7 @@
 
 import argparse
 import logging
-from .plugins import find_plugin_files, load_plugin_functions
+from .plugin import find_plugin_files, load_plugin_functions
 import sys
 logger = logging.getLogger()
 logger.setLevel(logging.WARN)
