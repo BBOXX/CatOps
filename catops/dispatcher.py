@@ -14,7 +14,7 @@ def load_plugins(plugin_dir='plugins'):
     return load_plugin_functions(find_plugin_files(plugin_dir, '', '_'), '', '_')
 
 
-class Dispatcher(object):
+class Dispatcher:
     def __init__(self):
         logger.info('Loading plugins...')
         plugins, functions = load_plugins()
@@ -23,12 +23,12 @@ class Dispatcher(object):
             setattr(self, key, val)
         logger.info('Plugins loaded.\n')
 
-    def parse_commmand(self, text):
+    def parse_command(self, text):
         argv = text.split()
 
         parser = CatParser(
             usage='''
-                quack <command> [<args>]
+                meow <command> [<args>]
 
                 commands:
                    {0} 
