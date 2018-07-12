@@ -5,8 +5,9 @@
 Highly trained cats for managing servers.
 
 .. image:: docs/catops.jpg
-  :width: 200
+  :width: 100
   :alt: Dedicated server support agent.
+  :align: center
 
 
 What is CatOps?
