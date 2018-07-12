@@ -19,7 +19,7 @@ Features
 - Pay per invocation.
 - Provider agnostic.
 
-Why CatOps? (Why ChatOps?)
+Why CatOps?
 -------------------------- 
 
 - Codify common maintenance procedures.
