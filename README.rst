@@ -41,8 +41,8 @@ Why CatOps?
 		- Reduce clutter when trying to figure out next actions. 
 
 - Reduce context switching.
-		- No switching into Shell/Linux/ssh/VPN to fix most server issues.
-		- No checking server logs.
+    - No need for bash, Linux, ssh or VPN to fix most server issues.
+    - No checking server logs.
     - Easily accesible and readble output.
 
 - NoOps.
