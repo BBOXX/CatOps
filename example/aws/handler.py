@@ -17,9 +17,11 @@ def execute(params):
 
 
 def endpoint(event, context):
-    return execute(event['command'])
+    return execute(event.text)
+
 
 
 if __name__=="__main__":
-    event = {'command':['meow', 'hi']}
-    print(endpoint(event,''))
+    class Event(object):
+        text = 'meow hi'
+    print(endpoint(Event(),''))
