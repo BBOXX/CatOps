@@ -1,10 +1,13 @@
-CatOps
-======
+.. raw:: html
+
+  <h1 align="center" >CatOps</h1>
+
 Highly trained cats for managing servers.
 
 .. image:: docs/catops.jpg
-  :width: 400
-    :alt: Dedicated server support agent.
+  :width: 200
+  :alt: Dedicated server support agent.
+
 
 What is CatOps?
 ---------------
