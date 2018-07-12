@@ -1,18 +1,13 @@
 """dispatch.py Decode & Dispatch: Parse incoming text into commands and dispatch to appropriate plugin functions."""
 
-import argparse
 import logging
+from .parser import CatParser
 from .plugin import find_plugin_files, load_plugin_functions
 import sys
 logger = logging.getLogger()
 logger.setLevel(logging.WARN)
 logger.addHandler(logging.StreamHandler())
 
-class ArgumentParserError(Exception): pass
-
-class ThrowingParser(argparse.ArgumentParser):
-    def error(self, message):
-        raise ArgumentParserError(message)
 
 
 def load_plugins(plugin_dir='plugins'):
@@ -31,7 +26,7 @@ class Dispatcher(object):
     def parse_commmand(self, text):
         argv = text.split()
 
-        parser = ThrowingParser(
+        parser = CatParser(
             usage='''
                 quack <command> [<args>]
 

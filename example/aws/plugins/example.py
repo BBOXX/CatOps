@@ -1,18 +1,17 @@
 """example.py - example plugin for ChatOps."""
 
-import argparse
+from catops import CatParser
 
-class ArgumentParserError(Exception): pass
-
-class ThrowingParser(argparse.ArgumentParser):
-    def error(self, message):
-        raise ArgumentParserError(message)
 
 def hi(self):
-    parser = ThrowingParser(
+    return "Meow!"
+
+
+def nested(self):
+    """This is an implementation of a nested argument parser. e.g. git --help, git status --help """
+    parser = CatParser(
         description='Check plugin loader is working',
         usage='''meow hi''')
-    # prefixing the argument with -- means it's optional
-    # now that we're inside a subcommand, ignore the first
+    # take from second argument since are in the 2nd level of the argument parsing.
     args = parser.parse_args(self.argv[2:])
     return "Meow!"
