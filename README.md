@@ -16,34 +16,34 @@ using the function name.
 ## Why CatOps?
 
 - NoOps.
-		- Deploy, rewrite, and redeploy FaaS easily with no worrying about setting up and managing servers.
-		- Only charged when CatOps is called.
+	- Deploy, rewrite, and redeploy FaaS easily with no worrying about setting up and managing servers.
+	- Only charged when CatOps is called.
 
 - Codify common maintenance procedures.
-		- Perform high level actions without intimate low level knowledge.
-		- Prevent errors doing complicated but routine tasks. 
+	- Perform high level actions without intimate low level knowledge.
+	- Prevent errors doing complicated but routine tasks. 
 
 - Unify documentation.
-		- CatOps can act as a unified go-to location for help, merging/pooling all documentation into one place.
+	- CatOps can act as a unified go-to location for help, merging/pooling all documentation into one place.
 
 - Transparency.
-		- Team members can see all actions taken by others in solving a problem. Organic learning.
-		- No 'go-to' person for certain maintenance tasks.
-		- Everyone aware of server changes. No-one surprised that the server is down if they see `/meow restart server` in the chat.
-		- Spread knowledge; everyone becomes equally capable of solving problems.
-		- Out of date help messages or documentation is more obvious to everyone.
+	- Team members can see all actions taken by others in solving a problem. Organic learning.
+	- No 'go-to' person for certain maintenance tasks.
+	- Everyone aware of server changes. No-one surprised that the server is down if they see `/meow restart server` in the chat.
+	- Spread knowledge; everyone becomes equally capable of solving problems.
+	- Out of date help messages or documentation is more obvious to everyone.
 
 - Context-aware suggestions, suggest actions and display help depending on context.
-		- Docs/procedures/etc are useful, but can be too much to read through, hard to find, not up to date. 
-		- Reduce clutter when trying to figure out next actions. 
+	- Docs/procedures/etc are useful, but can be too much to read through, hard to find, not up to date. 
+	- Reduce clutter when trying to figure out next actions. 
 
 - Reduce context switching.
-    - No need for bash, Linux, ssh or VPN to fix most server issues.
-    - No checking server logs.
-    - Easily accesible and readble output.
+	- No need for bash, Linux, ssh or VPN to fix most server issues.
+	- No checking server logs.
+	- Easily accesible and readble output.
 
 - Control access.
-		- Only gives necessary access, no unnecessary ssh-ing into production!
+	- Only gives necessary access, no unnecessary ssh-ing into production!
 
 ## Features
 
