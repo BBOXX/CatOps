@@ -11,23 +11,19 @@ Commands you wish to add to your CatOps implementation are added to a `plugins`
 folder in the same directory, and will then be automatically imported and callable
 using the function name.
 
-Features
---------
-
-- Completely NoOps. 
-- Easily extensible.
-- Pay per invocation.
-- Provider agnostic.
 
 Why CatOps?
 -------------------------- 
+
+- NoOps.
+		- Deploy, rewrite, and redeploy FaaS easily with no worrying about setting up and managing servers.
+		- Only charged when CatOps is called.
 
 - Codify common maintenance procedures.
 		- Perform high level actions without intimate low level knowledge.
 		- Prevent errors doing complicated but routine tasks. 
 
-- Unify documentation.
-    - CatOps can act as a unified go-to location for help, merging/pooling all documentation into one place.
+- Unify documentation.  - CatOps can act as a unified go-to location for help, merging/pooling all documentation into one place.
 
 - Transparency.
 		- Team members can see all actions taken by others in solving a problem. Organic learning.
@@ -45,13 +41,16 @@ Why CatOps?
     - No checking server logs.
     - Easily accesible and readble output.
 
-- NoOps.
-		- Deploy, rewrite, and redeploy FaaS easily with no worrying about setting up and managing servers.
-		- Only charged when CatOps is called.
-
 - Control access.
 		- Only gives necessary access, no unnecessary ssh-ing into production!
 
+Features
+--------
+
+- Completely NoOps. 
+- Easily extensible.
+- Pay per invocation.
+- Provider agnostic.
 
 Example
 --------
@@ -155,5 +154,4 @@ Limitations
     - Max size (256MB for AWS Lambda)
     - Execution time limit (5 minute for AWS Lambda)
     - No state (recommend using a cloud-based database for state e.g. DynamoDB for AWS)
-
 
