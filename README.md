@@ -1,9 +1,8 @@
-CatOps
-======
+# CatOps
+
 Highly trained cats for managing servers.
 
-What is CatOps?
----------------
+## What is CatOps?
 
 CatOps is a very simple NoOps framework for deploying your own ChatOps bot.
 
@@ -11,19 +10,16 @@ Commands you wish to add to your CatOps implementation are added to a `plugins`
 folder in the same directory, and will then be automatically imported and callable
 using the function name.
 
-Features
---------
+## Features
 
 - Completely NoOps. 
 - Easily extensible.
 - Pay per invocation.
 - Provider agnostic.
 
-Example
---------
+## Example
 
-Python handler
-^^^^^^^^^^^^^^^
+### Python handler
 
 ```python handler.py
 from catops import dispatch
@@ -43,8 +39,7 @@ def endpoint(event, context):
     return response
 ```
 
-Example plugin
-^^^^^^^^^^^^^^^
+### Example plugin
 
 ```python plugins/example.py
 """example.py - example plugin for ChatOps."""
@@ -54,8 +49,7 @@ def hi(self):
 
 ```
 
-Serverless configuration
-^^^^^^^^^^^^^^^
+### Serverless configuration
 
 ```yaml serverless.yml
 service: CatOps
@@ -86,8 +80,7 @@ plugins:
   - serverless-python-requirements
 ```
 
-Deploy
-^^^^^^
+### Deploy
 
 ```bash
 serverless deploy
@@ -95,8 +88,7 @@ serverless deploy
 
 See [examples](example/) for more.
 
-Installation
-^^^^^^^^^^^^
+### Installation
 
 ```bash
 sudo apt-get install npm # install node
@@ -105,11 +97,10 @@ npm install serverless-python-requirements # install serverless-python-requireme
 pip install catops
 ```
 
-
-
 ## FAQ
 
-# Old readme
+## Old readme
+
 For now, research on implementing an event-driven, serverless ChatOps integration (for Slack) that is capable of managing DevOps.
 
 ## Why
