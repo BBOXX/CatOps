@@ -95,6 +95,12 @@ def find_plugin_files(dir_path, include_file_prefix='', ignore_file_prefix='_'):
 def load_plugin_functions(filepaths, include_prefix='', ignore_prefix='_'):
     functions = {}
     docs = []
+
+    if not filepaths:
+        err = 'No plugin files found'
+        logger.warning(err)
+        return docs, functions
+
     for filepath in filepaths:
         logger.info('Checking {}'.format(filepath))
         doc, f = find_plugin_functions(filepath, include_prefix=include_prefix, ignore_prefix = ignore_prefix)
