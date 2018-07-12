@@ -4,7 +4,7 @@
 
 Highly trained cats for managing servers.
 
-.. image:: docs/catops.jpg
+.. image:: https://github.com/BBOXX/CatOps/blob/master/docs/catops.jpg
   :width: 100
   :alt: Dedicated server support agent.
   :align: center
