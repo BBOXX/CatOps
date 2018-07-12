@@ -88,12 +88,18 @@ Serverless configuration
     - serverless-python-requirements
 
 
-Deploy
-^^^^^^
+Deploy and Test
+^^^^^^^^^^^^^^^
 
-:code:`serverless deploy`
+.. code-block:: bash
 
-See [examples](https://github.com/bboxx/catops/example/) for more.
+  serverless deploy
+  serverless invoke --function dispatcher --path /path/to/json/data --log
+
+
+See examples_ for more.
+
+.. _examples: https://github.com/bboxx/catops/example/
 
 Installation
 ============
