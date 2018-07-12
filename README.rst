@@ -26,7 +26,8 @@ Why CatOps? (Why ChatOps?)
 		- Perform high level actions without intimate low level knowledge.
 		- Prevent errors doing complicated but routine tasks. 
 
-- Unify documentation. Developer docs can be all over the place; CatOps can act as a unified go-to location for help.
+- Unify documentation.
+    - CatOps can act as a unified go-to location for help, merging/pooling all documentation into one place.
 
 - Transparency.
 		- Team members can see all actions taken by others in solving a problem. Organic learning.
@@ -42,8 +43,7 @@ Why CatOps? (Why ChatOps?)
 - Reduce context switching.
 		- No switching into Shell/Linux/ssh/VPN to fix most server issues.
 		- No checking server logs.
-
-- Output easily readable.
+    - Easily accesible and readble output.
 
 - NoOps.
 		- Deploy, rewrite, and redeploy FaaS easily with no worrying about setting up and managing servers.
