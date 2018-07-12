@@ -111,7 +111,3 @@ Installation
   npm install serverless-python-requirements # install serverless-python-requirements in the same directory as serverless.yml
   pip install catops
 
-
-FAQ
-===
-
