@@ -1,27 +1,35 @@
 from catops import dispatch
 import json
+from six.moves.urllib.parse import parse_qs
 
 
-def execute(params):
-    try:
-        s = dispatch(params)
-    except Exception as err:
-        s = str(err)
-
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(s)
+def respond(err, res=None):
+    return {
+        "statusCode": "400" if err else "200",
+        "text": err.message if err else json.dumps(res),
+        "headers": {
+            "Content-Type": "application/json",
+        }
     }
 
-    return response
+
+def execute(text):
+    s = None
+    err = None
+
+    try:
+        s = dispatch(text)
+    except Exception as error:
+        err = error
+
+    return respond(err, s)
 
 
 def endpoint(event, context):
-    return execute(event.text)
-
-
+    return respond(None, {'received':str(event)})
+    #params = parse_qs(event["body"])
+    #return respond(None, params["text"])
 
 if __name__=="__main__":
-    class Event(object):
-        text = 'meow hi'
-    print(endpoint(Event(),''))
+    text = "meow hi"
+    print(execute(text))

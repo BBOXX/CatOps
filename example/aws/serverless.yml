@@ -19,8 +19,8 @@ functions:
     handler: handler.endpoint
     events:
       - http:
-          path: ping
-          method: get
+          path: test
+          method: post
 
 plugins:
   - serverless-python-requirements
