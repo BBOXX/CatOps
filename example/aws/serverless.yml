@@ -1,0 +1,26 @@
+service: CatOps
+
+package:
+  include:
+    - handler.py
+    - plugins/**
+
+custom:
+  pythonRequirements:
+    slim: true
+
+provider:
+  name: aws
+  runtime: python3.6
+  profile: serverless
+
+functions:
+  dispatcher:
+    handler: handler.endpoint
+    events:
+      - http:
+          path: ping
+          method: get
+
+plugins:
+  - serverless-python-requirements

@@ -1,0 +1,11 @@
+{
+  "name": "CatOps",
+  "description": "Highly trained cats for managing servers.",
+  "repository":"https://github.com/bboxx/CatOps",
+  "license":"MIT",
+  "version": "0.1.0",
+  "dependencies": {},
+  "devDependencies": {
+    "serverless-python-requirements": "^4.1.0"
+  }
+}
