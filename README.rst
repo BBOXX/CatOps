@@ -144,7 +144,7 @@ See examples_ for more.
 .. _examples: https://github.com/bboxx/catops/example/
 
 Installation
-============
+------------
 
 .. code-block:: bash
 
@@ -156,7 +156,7 @@ Installation
 Install :code:`serverless-python-requirements` in the same dir as :code:`serverless.yml`.
 
 Limitations
-===========
+-----------
 
 - Passive rather than active; needs to be triggered (e.g. by Slack slash commands)
 - Limitations of FaaS
