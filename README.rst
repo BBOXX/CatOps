@@ -31,7 +31,8 @@ Why CatOps?
 		- Perform high level actions without intimate low level knowledge.
 		- Prevent errors doing complicated but routine tasks. 
 
-- Unify documentation.  - CatOps can act as a unified go-to location for help, merging/pooling all documentation into one place.
+- Unify documentation.
+		- CatOps can act as a unified go-to location for help, merging/pooling all documentation into one place.
 
 - Transparency.
 		- Team members can see all actions taken by others in solving a problem. Organic learning.
@@ -143,7 +144,7 @@ See examples_ for more.
 .. _examples: https://github.com/bboxx/catops/example/
 
 Installation
-============
+------------
 
 .. code-block:: bash
 
@@ -155,7 +156,7 @@ Installation
 Install :code:`serverless-python-requirements` in the same dir as :code:`serverless.yml`.
 
 Limitations
-===========
+-----------
 
 - Passive rather than active; needs to be triggered (e.g. by Slack slash commands)
 - Limitations of FaaS
