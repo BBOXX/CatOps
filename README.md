@@ -1,17 +1,10 @@
-.. raw:: html
-
-  <h1 align="center" >CatOps</h1>
+<h1 align="center" >CatOps</h1>
 
 Highly trained cats for managing servers.
 
-.. image:: https://github.com/BBOXX/CatOps/blob/master/docs/catops.jpg
-  :width: 100
-  :alt: Dedicated server support agent.
-  :align: center
+![Dedicated server support agent.](https://github.com/BBOXX/CatOps/blob/master/docs/catops.jpg)
 
-
-What is CatOps?
----------------
+## What is CatOps?
 
 CatOps is a very simple NoOps framework for deploying your own ChatOps bot.
 
@@ -20,8 +13,7 @@ folder in the same directory, and will then be automatically imported and callab
 using the function name.
 
 
-Why CatOps?
--------------------------- 
+## Why CatOps?
 
 - NoOps.
 		- Deploy, rewrite, and redeploy FaaS easily with no worrying about setting up and managing servers.
@@ -53,110 +45,97 @@ Why CatOps?
 - Control access.
 		- Only gives necessary access, no unnecessary ssh-ing into production!
 
-Features
---------
+## Features
 
 - Completely NoOps. 
 - Easily extensible.
 - Pay per invocation.
 - Provider agnostic.
 
-Example
---------
+## Example
 
-Python handler
-^^^^^^^^^^^^^^^
+### Python handler
 
-.. code-block:: python
+```python handler.py
+from catops import dispatch
+import json
 
-  from catops import dispatch
-  import json
+def endpoint(event, context):
+    # event = {'command':['meow', 'hi']} # example event passed to lambda
+    params = event['command']
+    try:
+        s = dispatch(params)
+    except Exception as err:
+        s = str(err)
+    response = {
+        "statusCode": 200,
+        "body": json.dumps(s)
+    }
+    return response
+```
 
-  def endpoint(event, context):
-      # event = {'command':['meow', 'hi']} # example event passed to lambda
-      params = event['command']
-      try:
-          s = dispatch(params)
-      except Exception as err:
-          s = str(err)
-      response = {
-          "statusCode": 200,
-          "body": json.dumps(s)
-      }
-      return response
+### Example plugin
 
+```python plugins/example.py
+"""example.py - example plugin for ChatOps."""
 
-Example plugin
-^^^^^^^^^^^^^^
+def hi(*args):
+    return "Meow!"
+```
 
-.. code-block:: python
+### Serverless configuration
 
-  """example.py - example plugin for ChatOps."""
+```yaml serverless.yml
+service: CatOps
 
-  def hi(self):
-      return "Meow!"
+package:
+  include:
+    - handler.py
+    - plugins/**
 
+custom:
+  pythonRequirements:
+    slim: true
 
-Serverless configuration
-^^^^^^^^^^^^^^^^^^^^^^^^
+provider:
+name: aws
+runtime: python3.6
+profile: serverless
 
-.. code-block:: yaml
+functions:
+  dispatcher:
+    handler: handler.endpoint
+    events:
+      - http:
+          path: ping
+          method: get
 
-  service: CatOps
+plugins:
+  - serverless-python-requirements
+```
 
-  package:
-    include:
-      - handler.py
-      - plugins/**
+### Deploy and Test
 
-  custom:
-    pythonRequirements:
-      slim: true
+```bash
+serverless deploy
+serverless invoke --function dispatcher --path /path/to/json/data --log
+```
 
-  provider:
-  name: aws
-  runtime: python3.6
-  profile: serverless
-
-  functions:
-    dispatcher:
-      handler: handler.endpoint
-      events:
-        - http:
-            path: ping
-            method: get
-
-  plugins:
-    - serverless-python-requirements
-
-
-Deploy and Test
-^^^^^^^^^^^^^^^
-
-.. code-block:: bash
-
-  serverless deploy
-  serverless invoke --function dispatcher --path /path/to/json/data --log
+See [examples](https://github.com/bboxx/catops/example/) for more.
 
 
-See examples_ for more.
+## Installation
 
-.. _examples: https://github.com/bboxx/catops/example/
+```bash
+sudo apt-get install npm
+sudo npm install -g serverless
+npm install serverless-python-requirements
+pip install catops
+```
 
-Installation
-------------
+Install `serverless-python-requirements` in the same dir as `serverless.yml`.
 
-.. code-block:: bash
-
-  sudo apt-get install npm
-  sudo npm install -g serverless
-  npm install serverless-python-requirements
-  pip install catops
-
-Install :code:`serverless-python-requirements` in the same dir as :code:`serverless.yml`.
-
-Limitations
------------
+## Limitations
 
 - Passive rather than active; needs to be triggered (e.g. by Slack slash commands)
 - Limitations of FaaS
