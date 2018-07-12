@@ -1,1 +1,1 @@
-catops
+catops>=0.0.4

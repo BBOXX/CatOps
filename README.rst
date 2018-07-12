@@ -1,6 +1,14 @@
-CatOps
-======
+.. raw:: html
+
+  <h1 align="center" >CatOps</h1>
+
 Highly trained cats for managing servers.
+
+.. image:: https://github.com/BBOXX/CatOps/blob/master/docs/catops.jpg
+  :width: 100
+  :alt: Dedicated server support agent.
+  :align: center
+
 
 What is CatOps?
 ---------------
@@ -10,6 +18,39 @@ CatOps is a very simple NoOps framework for deploying your own ChatOps bot.
 Commands you wish to add to your CatOps implementation are added to a `plugins`
 folder in the same directory, and will then be automatically imported and callable
 using the function name.
+
+
+Why CatOps?
+-------------------------- 
+
+- NoOps.
+		- Deploy, rewrite, and redeploy FaaS easily with no worrying about setting up and managing servers.
+		- Only charged when CatOps is called.
+
+- Codify common maintenance procedures.
+		- Perform high level actions without intimate low level knowledge.
+		- Prevent errors doing complicated but routine tasks. 
+
+- Unify documentation.  - CatOps can act as a unified go-to location for help, merging/pooling all documentation into one place.
+
+- Transparency.
+		- Team members can see all actions taken by others in solving a problem. Organic learning.
+		- No 'go-to' person for certain maintenance tasks.
+		- Everyone aware of server changes. No-one surprised that the server is down if they see `/meow restart server` in the chat.
+		- Spread knowledge; everyone becomes equally capable of solving problems.
+		- Out of date help messages or documentation is more obvious to everyone.
+
+- Context-aware suggestions, suggest actions and display help depending on context.
+		- Docs/procedures/etc are useful, but can be too much to read through, hard to find, not up to date. 
+		- Reduce clutter when trying to figure out next actions. 
+
+- Reduce context switching.
+    - No need for bash, Linux, ssh or VPN to fix most server issues.
+    - No checking server logs.
+    - Easily accesible and readble output.
+
+- Control access.
+		- Only gives necessary access, no unnecessary ssh-ing into production!
 
 Features
 --------
@@ -106,8 +147,19 @@ Installation
 
 .. code-block:: bash
 
-  sudo apt-get install npm # install node
-  sudo npm install -g serverless # install serverless
-  npm install serverless-python-requirements # install serverless-python-requirements in the same directory as serverless.yml
+  sudo apt-get install npm
+  sudo npm install -g serverless
+  npm install serverless-python-requirements
   pip install catops
+
+Install :code:`serverless-python-requirements` in the same dir as :code:`serverless.yml`.
+
+Limitations
+===========
+
+- Passive rather than active; needs to be triggered (e.g. by Slack slash commands)
+- Limitations of FaaS
+    - Max size (256MB for AWS Lambda)
+    - Execution time limit (5 minute for AWS Lambda)
+    - No state (recommend using a cloud-based database for state e.g. DynamoDB for AWS)
 
