@@ -1,11 +1,14 @@
+#/bin/python3
+"""Handlers for AWS Lambda."""
 import json
+from six.moves.urllib.parse import parse_qs
 import requests
 import boto3
 from catops import dispatch
-from six.moves.urllib.parse import parse_qs
 
 
 def make_response(err, res=None):
+    """Make response object for immediate slack response."""
     if res and (isinstance(res, dict) or isinstance(res, list)):
         res = json.dumps(res)
     payload = {
@@ -17,10 +20,11 @@ def make_response(err, res=None):
 
 
 def respond(event, context):
+    """Call handler.main asynchronously and then return instant response."""
     lambda_client = boto3.client('lambda')
-    response = make_response(None, 'Meow!')
+    # response = make_response(None, 'Meow!')
+    response = {'statusCode':'200'}
     # Call actual function asynchronously
-    print(lambda_client.list_functions())
     lambda_client.invoke(
         FunctionName='CatOpsAsyncTest-dev-dispatcher',
         InvocationType='Event',
@@ -28,44 +32,32 @@ def respond(event, context):
     return response
 
 
-def execute(text):
-    s = None
-    err = None
-    try:
-        s = dispatch(text)
-    except Exception as error:
-        err = error
-    return respond(s, '')
-
-
-def func(event, context):
+def main(event, context):
+    """Main lamda function logic, to be called asynchronously."""
     # Print prints logs to cloudwatch
     print(event)
     if not isinstance(event, dict):
         try:
             event = json.loads(event)
-        except:
-            pass
+        except ValueError as err:
+            print(err)
 
     params = parse_qs(event.get('body'))
-    print(params)
-    # Send response to response url
-    payload = {
-        'statusCode':'200',
-        'text':'Delayed response',#{'text':'Delayed response.'},
-        'headers':{'Content-Type': 'application/json'}
-    }
+    try:
+        payload = dispatch(params.get('text')[0])
+        (payload['attachments'])[0]['author_name'] = '@{}'.format(params.get('user_name', ['CatOps'])[0])
+    except Exception as err:
+        print("Dispatch failed: {}".format(err))
+        payload = {
+            'statusCode':'200',
+            'text':'Kitten dispatch team did not succeed.',
+            'headers':{'Content-Type': 'application/json'}
+        }
+
     # Post to Slack channel
     r = requests.post(params.get('response_url')[0], data=json.dumps(payload))
-    print(r)
     if not r.ok:
-        print(dir(r))
+        print(r)
         print(r.reason)
         print(r.text)
-        print(r.json)
     return
-
-
-if __name__ == '__main__':
-    text = 'meow hi'
-    print(execute(text))
