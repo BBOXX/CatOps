@@ -20,7 +20,7 @@ functions:
     events:
       - http:
           path: ping
-          method: get
+          method: post
 
 plugins:
   - serverless-python-requirements

@@ -14,7 +14,7 @@ def load_plugins(plugin_dir='plugins', ignore_file_prefix='_', include_file_pref
     return load_plugin_functions(plugin_files, include_function_prefix, ignore_function_prefix)
 
     
-def meow(argv=[]):
+def meow(args=None):
     """Test function."""
     return "Meow!"
 
@@ -56,9 +56,9 @@ class Dispatcher(object):
         # use dispatch pattern to invoke method with same name
         return getattr(self, args.command)(self.argv)
 
-def dispatch(argv=sys.argv[1:0]):
+def dispatch(text):
     d = Dispatcher()
-    return d.parse_command(" ".join(argv))
+    return d.parse_command(text)
 
 if __name__ == '__main__':
     dispatch()
