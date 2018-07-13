@@ -22,11 +22,12 @@ def execute(text):
 
 
 def endpoint(event, context):
-    print(event)
-    print(event.get('body'))
-    params = parse_qs(event["body"])
-    print(params)
-    response = respond(None, params["text"])
+    # Print prints logs to cloudwatch
+    if not isinstance(event, dict):
+        print(event)
+        return respond(None, str(event))
+    params = parse_qs(event.get("body", "text=Meow!"))
+    response = respond(None, params.get("text", "Meow!"))
     print(response)
     return response
 
