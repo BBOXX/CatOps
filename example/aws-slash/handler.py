@@ -22,11 +22,10 @@ def make_response(err, res=None):
 def respond(event, context):
     """Call handler.main asynchronously and then return instant response."""
     lambda_client = boto3.client('lambda')
-    # response = make_response(None, 'Meow!')
     response = {'statusCode':'200'}
     # Call actual function asynchronously
     lambda_client.invoke(
-        FunctionName='CatOpsAsyncTest-dev-dispatcher',
+        FunctionName='CatOps-dev-dispatcher',
         InvocationType='Event',
         Payload=json.dumps(event))
     return response
@@ -36,12 +35,6 @@ def main(event, context):
     """Main lamda function logic, to be called asynchronously."""
     # Print prints logs to cloudwatch
     print(event)
-    if not isinstance(event, dict):
-        try:
-            event = json.loads(event)
-        except ValueError as err:
-            print(err)
-
     params = parse_qs(event.get('body'))
     try:
         payload = dispatch(params.get('text')[0], params)
@@ -52,7 +45,6 @@ def main(event, context):
             'text':'Kitten dispatch team did not succeed.',
             'headers':{'Content-Type': 'application/json'}
         }
-
     # Post to Slack channel
     r = requests.post(params.get('response_url')[0], data=json.dumps(payload))
     if not r.ok:

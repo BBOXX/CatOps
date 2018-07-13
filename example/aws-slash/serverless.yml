@@ -1,4 +1,4 @@
-service: CatOpsAsyncTest
+service: CatOps
 
 package:
   include:

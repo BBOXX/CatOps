@@ -11,7 +11,7 @@ def ping(argv, params):
         'text':'@{} Meow!'.format(params.get('user_name', ['CatOps'])[0]),
         'response_type':'in_channel',
     }
-    return "Meow!"
+    return payload
 
 
 def nested(argv, params):
