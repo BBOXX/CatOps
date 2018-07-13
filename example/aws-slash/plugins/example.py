@@ -42,7 +42,7 @@ def cat(argv, params):
         'statusCode':'200',
         "attachments": [
             {
-                "author_name": '@{}'.format(params.get('user_name', ['CatOps'])[0]),
+                "author_name": '@{} /catops cat'.format(params.get('user_name', ['CatOps'])[0]),
                 "fallback": "Meow meow.",
                 "title": "Meow!",
                 "text": "Here is a cat.",
