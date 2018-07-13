@@ -1,4 +1,4 @@
-service: CatOpsTest
+service: CatOpsAsyncTest
 
 package:
   include:
@@ -11,12 +11,22 @@ custom:
 
 provider:
   name: aws
+  stage: ${opt:stage, 'dev'}
   runtime: python3.6
   profile: serverless
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:ListFunctions
+        - lambda:InvokeFunction
+        - lambda:InvokeAsync
+      Resource: "*"
 
 functions:
   dispatcher:
-    handler: handler.endpoint
+    handler: handler.func
+  respond:
+    handler: handler.respond
     events:
       - http:
           path: ping
