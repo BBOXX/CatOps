@@ -4,12 +4,11 @@ import requests
 from catops import CatParser
 from bs4 import BeautifulSoup as BSHTML
 
-
 def ping(argv, params):
     """Check is working."""
     payload = {
         'statusCode':'200',
-        'text':'@{} Meow!'.format(params.get('user_name', ['CatOps'})[0]),
+        'text':'@{} Meow!'.format(params.get('user_name', ['CatOps'])[0]),
         'response_type':'in_channel',
     }
     return "Meow!"
@@ -42,6 +41,7 @@ def cat(argv, params):
     payload = {
         'statusCode':'200',
         "attachments": [
+            {
                 "author_name": '@{}'.format(params.get('user_name', ['CatOps'])[0]),
                 "fallback": "Meow meow.",
                 "title": "Meow!",
