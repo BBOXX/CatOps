@@ -15,9 +15,9 @@ def load_plugins(plugin_dir='plugins', ignore_file_prefix='_', include_file_pref
     return load_plugin_functions(plugin_files, include_function_prefix, ignore_function_prefix)
 
 
-def meow(args=None):
+def meow(args=None, params=None):
     """Test function."""
-    return "Meow!"
+    return {'statusCode':200, 'text':'@{} Meow!'.format(params.get('user_name')[0])}
 
 
 class Dispatcher(object):
@@ -38,7 +38,7 @@ class Dispatcher(object):
         LOG.info('Plugins loaded.\n')
         return
 
-    def parse_command(self, text):
+    def parse_command(self, text, params):
         self.argv = text.split()
 
         parser = CatParser(
@@ -55,13 +55,13 @@ class Dispatcher(object):
             parser.print_help()
             raise ArgumentParserError(err)
         # use dispatch pattern to invoke method with same name
-        return getattr(self, args.command)(self.argv)
+        return getattr(self, args.command)(self.argv, params)
 
 
-def dispatch(text):
+def dispatch(command, params={'user_name':['CatOps']}):
     d = Dispatcher()
-    return d.parse_command(text)
+    return d.parse_command(command, params)
 
 if __name__ == '__main__':
-    dispatch('meow')
+    dispatch('meow', {'user_name':['CatOps']})
 
