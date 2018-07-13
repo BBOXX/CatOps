@@ -1,4 +1,4 @@
-service: CatOps
+service: CatOpsTest
 
 package:
   include:
