@@ -19,7 +19,7 @@ functions:
     handler: handler.endpoint
     events:
       - http:
-          path: test
+          path: ping
           method: post
 
 plugins:
