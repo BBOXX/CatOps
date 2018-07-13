@@ -24,7 +24,7 @@ provider:
 
 functions:
   dispatcher:
-    handler: handler.func
+    handler: handler.main
   respond:
     handler: handler.respond
     events:

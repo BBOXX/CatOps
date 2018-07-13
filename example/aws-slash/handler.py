@@ -44,8 +44,7 @@ def main(event, context):
 
     params = parse_qs(event.get('body'))
     try:
-        payload = dispatch(params.get('text')[0])
-        (payload['attachments'])[0]['author_name'] = '@{}'.format(params.get('user_name', ['CatOps'])[0])
+        payload = dispatch(params.get('text')[0], params)
     except Exception as err:
         print("Dispatch failed: {}".format(err))
         payload = {
