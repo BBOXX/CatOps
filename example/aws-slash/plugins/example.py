@@ -56,3 +56,26 @@ def cat(argv, params):
     return payload
 
 
+def dog(argv, params):
+    # Print prints logs to cloudwatch
+    # Send response to response url
+    dogurl = 'https://api.thedogapi.com/v1/images/search?breed_id=&mime_types=jpg,png&limit&format'
+    dogr = requests.get(dogurl)
+    url = dogr.json()[0].get('url')
+
+    payload = {
+        'statusCode':'200',
+        "attachments": [
+            {
+                "author_name": '@{} /catops dog'.format(params.get('user_name', ['CatOps'])[0]),
+                "fallback": "Woof woof.",
+                "title": "Woof!",
+                "text": "Evil doggo.",
+                "image_url": url,
+                "color": "#764FA5"
+            }
+        ],
+        'response_type':'in_channel',
+        'headers':{'Content-Type': 'application/json'}
+    }
+    return payload
