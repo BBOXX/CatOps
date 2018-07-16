@@ -87,7 +87,7 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     packages=find_packages(exclude=('tests',)),
-    package_data={'catops': ['plugins/*']}, install_requires=REQUIRED,
+    install_requires=REQUIRED,
     # dependency_links=DEPENDENCY_LINKS,
     include_package_data=True,
     license='MIT',
