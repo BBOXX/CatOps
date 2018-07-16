@@ -7,7 +7,7 @@ import boto3
 from catops import dispatch
 from slacker import Slacker
 # from werkzeug.wrappers import Response
-SLACK = Slacker('<slack-api-token>')
+SLACK = Slacker('')
 
 
 def make_response(status_code='200', headers={}, body=''):
@@ -48,7 +48,3 @@ def main(event, context):
     """Main lamda function logic, to be called asynchronously."""
     SLACK.chat.post_message('#bot_tests', json.dumps(event))
 
-
-def log(event, context):
-    """Print logs to Slack (maybe after some processing)"""
-    SLACK.chat.post_message('#bot_tests', json.dumps(event))
