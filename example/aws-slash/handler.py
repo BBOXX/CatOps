@@ -39,10 +39,9 @@ def main(event, context):
     try:
         payload = dispatch(params.get('text')[0], params)
     except Exception as err:
-        print("Dispatch failed: {}".format(err))
         payload = {
             'statusCode':'200',
-            'text':'Kitten dispatch team did not succeed.',
+            'text':'Kitten dispatch team did not succeed. {}'.format(err),
             'headers':{'Content-Type': 'application/json'}
         }
     # Post to Slack channel
