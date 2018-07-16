@@ -1,0 +1,42 @@
+service: CatOpsBot
+
+package:
+  include:
+    - handler.py
+    - plugins/**
+
+custom:
+  pythonRequirements:
+    slim: true
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  runtime: python3.6
+  profile: serverless
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:ListFunctions
+        - lambda:InvokeFunction
+        - lambda:InvokeAsync
+      Resource: "*"
+
+functions:
+  dispatcher:
+    handler: handler.main
+  respond:
+    handler: handler.respond
+    events:
+      - http:
+          path: mention
+          method: post
+  logger: 
+    handler: handler.log
+    events:
+      - http:
+          path: log
+          method: post
+
+plugins:
+  - serverless-python-requirements
