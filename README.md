@@ -174,8 +174,9 @@ Install `serverless-python-requirements` in the same dir as `serverless.yml`.
 
 ## Limitations
 
-- Passive rather than active; needs to be triggered (e.g. by Slack slash commands)
+- Passive rather than active; needs to be triggered (e.g. by Slack slash commands (could run it every command))
 - Limitations of FaaS
   - Max size (256MB for AWS Lambda)
   - Execution time limit (5 minute for AWS Lambda)
   - No state (recommend using a cloud-based database for state e.g. DynamoDB for AWS)
+- No autocomplete inside of Slack.
