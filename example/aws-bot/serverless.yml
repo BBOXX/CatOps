@@ -31,12 +31,6 @@ functions:
       - http:
           path: mention
           method: post
-  logger: 
-    handler: handler.log
-    events:
-      - http:
-          path: log
-          method: post
 
 plugins:
   - serverless-python-requirements
