@@ -4,9 +4,10 @@ import catops
 
 class DispatcherTest(unittest.TestCase):
     def test_meow(self):
-        self.assertEqual("Meow!", catops.dispatch(['meow']))
+        answer = {'statusCode':200, 'text':'@CatOps Meow!'}
+        self.assertEqual(answer, catops.dispatch('meow'))
     def test_no_args(self):
-        self.assertRaises(catops.parser.ArgumentParserError, catops.dispatch([]))
+        self.assertRaises(catops.parser.ArgumentParserError, lambda: catops.dispatch(''))
 
 class PluginsTest(unittest.TestCase):
     def test_placeholder(self):
