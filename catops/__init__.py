@@ -1,2 +1,2 @@
 from .parser import CatParser, ArgumentParserError
-from .dispatcher import dispatch
+from .dispatcher import Dispatcher, dispatch

@@ -21,14 +21,14 @@ def meow(args=None, params=None):
 
 
 class Dispatcher(object):
-    functions = None
-    plugins = None
-    argv = None
+    functions = None    # Dictionary of functions imported from plugins files.
+    plugins = None      # Function names.
 
-    def __init__(self):
+
+    def __init__(self, plugin_dir = 'plugins/'):
         setattr(self,  'meow', meow)
         LOG.info('Loading plugins...')
-        self.plugins, self.functions = load_plugins()
+        self.plugins, self.functions = load_plugins(plugin_dir)
         if not (self.plugins or self.functions):
             LOG.error('No plugins found.')
             return
@@ -38,9 +38,7 @@ class Dispatcher(object):
         LOG.info('Plugins loaded.\n')
         return
 
-    def parse_command(self, text, params):
-        self.argv = text.split()
-
+    def _create_parser(self):
         parser = CatParser(
             usage='''
                 <command> [<args>]
@@ -49,13 +47,20 @@ class Dispatcher(object):
                    {0} 
             '''.format("\n".join(self.functions.keys()) if self.functions else None))
         parser.add_argument('command', help='Subcommand to run')
-        args = parser.parse_args(self.argv[0:1])
+        return parser
+        
+    def parse_command(self, text, params):
+        argv = text.split()
+        parser = self._create_parser()
+        args = parser.parse_args(argv[0:1])
         if not hasattr(self, args.command):
-            err = 'Unrecognized command: {}'.format(args.command)
-            parser.print_help()
+            err = 'Unrecognized command: {}\n{}'.format(args.command, parser.format_help())
             raise ArgumentParserError(err)
         # use dispatch pattern to invoke method with same name
-        return getattr(self, args.command)(self.argv, params)
+        return getattr(self, args.command)(argv, params)
+
+    def get_parser(self):
+        return self._create_parser()
 
 
 def dispatch(command, params={'user_name':['CatOps']}):
