@@ -1,4 +1,5 @@
 #
+tokens.yml
 *.swp
 node_modules
 .serverless

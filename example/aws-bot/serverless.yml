@@ -14,6 +14,8 @@ provider:
   stage: ${opt:stage, 'dev'}
   runtime: python3.6
   profile: serverless
+  environment:
+    SlackOAuthToken: ${file(tokens.yml):SlackOAuthToken}
   iamRoleStatements:
     - Effect: Allow
       Action:

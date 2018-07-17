@@ -1,8 +1,10 @@
 #/bin/python3
 """Handlers for AWS Lambda."""
 import json
+import os
 from slacker import Slacker
-SLACK = Slacker('')
+
+SLACK = Slacker('{}'.format(os.environ['SlackOAuthToken']))
 
 def log(event, context):
     """Print logs to Slack (maybe after some processing)"""

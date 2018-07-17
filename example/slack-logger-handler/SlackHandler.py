@@ -1,6 +1,7 @@
 """Logging slack_handler which posts to a Slack channel."""
 import json
 import logging
+import os
 import requests
 
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
             "level":"%(levelname)s", \
             "message":"%(message)s"}'
     FORMAT = logging.Formatter(FORMAT_STR)
-    LAMBDA_URL = ''
+    LAMBDA_URL = os.environ['SLACK_LAMBDA_URL']
     # Create logger
 
     logger = logging.getLogger('slack_logger')
