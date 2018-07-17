@@ -21,7 +21,7 @@ def nested(argv, params):
         usage='''catops nested test''')
     # take from second argument since are in the 2nd level of the argument parsing.
     parser.add_argument('test')
-    args = parser.parse_args(argv[1:])
+    args = parser.parse_args(argv)
     payload = {
         'statusCode':'200',
         'text':'args were: {}'.format(argv),
