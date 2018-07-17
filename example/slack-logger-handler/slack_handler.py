@@ -1,4 +1,4 @@
-"""Logging slack_handler which posts to a Slack channel."""
+"""Logging.Handler subclass which posts to AWS Lambda which posts to a Slack channel."""
 import json
 import logging
 import os
@@ -11,6 +11,14 @@ class SlackHandler(logging.Handler):
 
     def __init__(self, lambda_url, level=logging.NOTSET):
         super(SlackHandler, self).__init__(level=level)
+        # Default format for this handler, enables json parsing and sending data as json to Lambda function.
+        DEFAULT_FORMAT = '{\
+            "channels":["#bot_tests"],\
+            "time":"%(asctime)s", \
+            "level":"%(levelname)s", \
+            "message":"%(message)s"}'
+
+        self.setFormatter(logging.Formatter(DEFAULT_FORMAT))
         self.lambda_url = lambda_url
 
     def emit(self, record):
@@ -38,22 +46,15 @@ class SlackHandler(logging.Handler):
 
 if __name__ == '__main__':
     # Constants
-    FORMAT_STR = '{\
-            "channels":["#bot_tests"],\
-            "time":"%(asctime)s", \
-            "level":"%(levelname)s", \
-            "message":"%(message)s"}'
-    FORMAT = logging.Formatter(FORMAT_STR)
     LAMBDA_URL = os.environ['SLACK_LAMBDA_URL']
-    # Create logger
 
+    # Create logger
     logger = logging.getLogger('slack_logger')
     logger.setLevel(logging.DEBUG)
 
     # Custom slack_handler
     slack_handler = SlackHandler(lambda_url=LAMBDA_URL)
     slack_handler.setLevel(logging.DEBUG)
-    slack_handler.setFormatter(FORMAT)
     logger.addHandler(slack_handler)
 
     # Test logging
