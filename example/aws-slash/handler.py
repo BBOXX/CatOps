@@ -38,10 +38,10 @@ def main(event, context):
     params = parse_qs(event.get('body'))
     try:
         payload = dispatch(params.get('text')[0], params)
-    except ArugmentParserError as err:
+    except ArgumentParserError as err:
         payload = {
             'statusCode':'200',
-            'text':'{}'.format(err),
+            'text':'{0}\n{1}'.format(params.get('text')[0], err),
             'headers':{'Content-Type': 'application/json'}
         }
     except Exception as err:
