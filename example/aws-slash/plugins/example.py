@@ -18,8 +18,9 @@ def nested(argv, params):
     """This is an implementation of a nested argument parser. e.g. git --help, git status --help """
     parser = CatParser(
         description='Check plugin loader is working',
-        usage='''meow hi''')
+        usage='''catops nested test''')
     # take from second argument since are in the 2nd level of the argument parsing.
+    parser.add_argument('test')
     args = parser.parse_args(argv[1:])
     payload = {
         'statusCode':'200',
