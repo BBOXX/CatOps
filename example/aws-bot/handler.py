@@ -6,7 +6,7 @@ import requests
 import boto3
 from catops import dispatch
 from slacker import Slacker
-# from werkzeug.wrappers import Response
+
 SLACK = Slacker('')
 
 
@@ -46,5 +46,6 @@ def respond(event, context):
 
 def main(event, context):
     """Main lamda function logic, to be called asynchronously."""
+    event['event']['text'] = (event['event']['text']).replace('@','')
     SLACK.chat.post_message('#bot_tests', json.dumps(event))
 
