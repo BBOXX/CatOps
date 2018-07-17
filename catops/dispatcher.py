@@ -44,8 +44,9 @@ class Dispatcher(object):
                 <command> [<args>]
 
                 commands:
-                   {0} 
-            '''.format("\n".join(self.functions.keys()) if self.functions else None))
+                    {0} 
+            '''.format("\n                    ".join(self.functions.keys()) if self.functions else None)
+            )
         parser.add_argument('command', help='Subcommand to run')
         return parser
         
@@ -54,7 +55,7 @@ class Dispatcher(object):
         parser = self._create_parser()
         args = parser.parse_args(argv[0:1])
         if not hasattr(self, args.command):
-            err = 'Unrecognized command: {}\n{}'.format(args.command, parser.format_help())
+            err = parser.format_help()
             raise ArgumentParserError(err)
         # use dispatch pattern to invoke method with same name
         return getattr(self, args.command)(argv, params)

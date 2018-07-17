@@ -4,7 +4,7 @@ import json
 from six.moves.urllib.parse import parse_qs
 import requests
 import boto3
-from catops import dispatch
+from catops import dispatch, ArgumentParserError
 
 
 def make_response(err, res=None):
@@ -38,10 +38,16 @@ def main(event, context):
     params = parse_qs(event.get('body'))
     try:
         payload = dispatch(params.get('text')[0], params)
+    except ArugmentParserError as err:
+        payload = {
+            'statusCode':'200',
+            'text':'{}'.format(err),
+            'headers':{'Content-Type': 'application/json'}
+        }
     except Exception as err:
         payload = {
             'statusCode':'200',
-            'text':'Kitten dispatch team did not succeed. {}'.format(err),
+            'text':'Kitten dispatch team did not succeed\n{}'.format(err),
             'headers':{'Content-Type': 'application/json'}
         }
     # Post to Slack channel
