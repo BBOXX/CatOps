@@ -24,7 +24,6 @@ class Dispatcher(object):
     functions = None    # Dictionary of functions imported from plugins files.
     plugins = None      # Function names.
 
-
     def __init__(self, plugin_dir = 'plugins/'):
         setattr(self,  'meow', meow)
         LOG.info('Loading plugins...')
