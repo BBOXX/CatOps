@@ -14,7 +14,7 @@ provider:
   runtime: python3.6
   profile: serverless
   environment:
-    SlackOAuthToken: ${file(tokens.yml):SlackOAuthToken}
+    SlackOAuthToken: ${file(tokens.json):SlackOAuthToken}
     # SlackOAuthToken: ${env:SLACKOAUTHTOKEN}
     # SlackBotUserOAuthToken: ${env:SLACKBOTUSEROAUTHTOKEN}
 
