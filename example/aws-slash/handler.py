@@ -6,14 +6,13 @@ import requests
 import boto3
 from catops import ArgumentParserError, convert_dispatch, get_text, SlackHandler
 import logging
-import yaml
 
 with open("tokens.json", 'r') as stream:
     TOKENS = json.load(stream)
 
 LOG = logging.getLogger('catops')
 LOG.setLevel(logging.INFO)
-HANDLER = SlackHandler(TOKENS['SlackOAuthToken'])
+HANDLER = SlackHandler(TOKENS['SlackLambdaURL'])
 HANDLER.setLevel(logging.INFO)
 FORMAT = '{\
     "channels":["#bot_tests"],\
@@ -43,8 +42,8 @@ def main(event, context):
         'statusCode':'200',
         'headers':{'Content-Type': 'application/json'}
     }
-    event_text = get_text(params)
-    payload = convert_dispatch(event_text, params)
+    payload = convert_dispatch(params)
+    LOG.info(payload)
 
     # Post to Slack channel
     response_url = params.get('response_url')
