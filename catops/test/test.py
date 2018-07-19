@@ -5,14 +5,13 @@ HELP_MSG = """usage:
                 <command> [<args>]
 
                 commands:
+                    help
                     ping\n                    nested\n                    cat\n                    dog 
             
 
 positional arguments:
-  command     Subcommand to run
-
-optional arguments:
-  -h, --help  show this help message and exit\n"""
+  command  Subcommand to run
+"""
 
 
 class DispatcherTest(unittest.TestCase):
