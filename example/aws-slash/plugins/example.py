@@ -29,8 +29,14 @@ def nested(argv, params):
             'response_type':'in_channel',
             'headers':{'Content-Type': 'application/json'}
         }
-    except ArgumentParserError:
-        
+    except ArgumentParserError as err:
+        payload = {
+            'statusCode':'200',
+            'text':str(err),
+            'response_type':'ephemeral',
+            'headers':{'Content-Type': 'application/json'}
+        }
+
     return payload
 
 

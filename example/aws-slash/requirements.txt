@@ -1,6 +1,6 @@
 boto3
 bs4
-catops>=0.1.2
+catops>=0.1.4
 requests
 six
 
