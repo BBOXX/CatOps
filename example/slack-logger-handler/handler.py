@@ -1,7 +1,9 @@
 #/bin/python3
 """Handlers for AWS Lambda."""
+import datetime
 import json
 import os
+
 from slacker import Slacker
 
 with open('tokens.json','r') as stream:
@@ -32,11 +34,20 @@ def log(event, context):
         return colour
 
     # SLACK.chat.post_message('#bot_tests', body)
-    jbody = json.loads(body)
-    message = jbody.get('message')
-    time = jbody.get('time')
-    level = jbody.get('level')
-    channels = jbody.get('channels')
+    err = False
+    try:
+        jbody = json.loads(body)
+        message = jbody.get('message')
+        time = jbody.get('time')
+        level = jbody.get('level')
+        channels = jbody.get('channels')
+    except json.JSONDecodeError:
+        message = 'Couldn\'t parse log json, log body:\n{}'.format(body)
+        time = str(datetime.datetime.now())
+        level = 'WARNING'
+        channels = ['#bot_tests']
+        err = True
+
     for channel in channels:
         SLACK.chat.post_message(
             channel,
@@ -50,7 +61,7 @@ def log(event, context):
                         {
                             "title":"Message",
                             "value":message,
-                            "short":True
+                            "short":False if err else True
                         },
                         {
                             "title":"Level",
