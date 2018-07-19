@@ -2,13 +2,15 @@
 """Handlers for AWS Lambda."""
 import json
 from six.moves.urllib.parse import parse_qs
-import os
 import requests
 import boto3
 from catops import dispatch
 from slacker import Slacker
 
-SLACK = Slacker('{}'.format(os.environ['SlackOAuthToken'])
+with open('tokens.json','r') as stream:
+    TOKENS = json.load(stream)
+
+SLACK = Slacker(TOKENS['SlackOAuthToken'])
 
 
 def make_response(status_code='200', headers={}, body=''):
