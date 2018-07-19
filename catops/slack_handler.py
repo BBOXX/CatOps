@@ -43,7 +43,6 @@ class SlackHandler(logging.Handler):
                 log_entry, headers={"Content-type": "application/json"}
             )
 
-
 def test():
     # Constants
     LAMBDA_URL = os.environ['SLACK_LAMBDA_URL']

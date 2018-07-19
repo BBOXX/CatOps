@@ -21,13 +21,22 @@ def nested(argv, params):
         usage='''catops nested test''')
     # take from second argument since are in the 2nd level of the argument parsing.
     parser.add_argument('test')
-    args = parser.parse_args(argv)
-    payload = {
-        'statusCode':'200',
-        'text':'args were: {}'.format(argv),
-        'response_type':'in_channel',
-        'headers':{'Content-Type': 'application/json'}
-    }
+    try:
+        args = parser.parse_args(argv)
+        payload = {
+            'statusCode':'200',
+            'text':'args were: {}'.format(argv),
+            'response_type':'in_channel',
+            'headers':{'Content-Type': 'application/json'}
+        }
+    except ArgumentParserError as err:
+        payload = {
+            'statusCode':'200',
+            'text':str(err),
+            'response_type':'ephemeral',
+            'headers':{'Content-Type': 'application/json'}
+        }
+
     return payload
 
 

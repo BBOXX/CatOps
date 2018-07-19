@@ -36,20 +36,27 @@ def main(event, context):
     # Print prints logs to cloudwatch
     print(event)
     params = parse_qs(event.get('body'))
+    payload = {
+        'statusCode':'200',
+        'headers':{'Content-Type': 'application/json'}
+    }
     try:
-        payload = dispatch(params.get('text')[0], params)
+        retval = dispatch(params.get('text')[0], params)
+        if type(retval) is str:
+            payload['text'] = retval
+        elif type(retval) is list: 
+            payload['text'] = json.dumps(retval)
+        elif type(retval) is dict:
+            if all(key in retval for key in ['headers', 'statusCode']):
+                payload = retval
+            else:
+                payload['text'] = json.dumps(retval)
+        else:
+            payload['text'] = str(retval)
     except ArgumentParserError as err:
-        payload = {
-            'statusCode':'200',
-            'text':'{0}\n{1}'.format(params.get('text')[0], err),
-            'headers':{'Content-Type': 'application/json'}
-        }
+        payload['text'] = '{0}\n{1}'.format(params.get('text')[0], err)
     except Exception as err:
-        payload = {
-            'statusCode':'200',
-            'text':'Kitten dispatch team did not succeed\n{}'.format(err),
-            'headers':{'Content-Type': 'application/json'}
-        }
+        payload['text'] = 'Kitten dispatch team did not succeed\n{}'.format(err)
     # Post to Slack channel
     r = requests.post(params.get('response_url')[0], data=json.dumps(payload))
     if not r.ok:
