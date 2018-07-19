@@ -3,7 +3,7 @@
   "description": "Deploys a Lambda function which posts logs to a Slack channel.",
   "repository":"https://github.com/bboxx/CatOps",
   "license":"MIT",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "dependencies": {},
   "devDependencies": {
     "serverless-python-requirements": "^4.1.0"
