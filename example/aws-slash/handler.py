@@ -15,10 +15,12 @@ LOG.setLevel(logging.INFO)
 HANDLER = SlackHandler(TOKENS['SlackLambdaURL'])
 HANDLER.setLevel(logging.INFO)
 FORMAT = '{\
-    "channels":["#bot_tests"],\
+    "channels":["#catops_logs"],\
     "time":"%(asctime)s", \ "level":"%(levelname)s", \
     "message":"%(message)s"}'
 FORMATTER = logging.Formatter(FORMAT)
+HANDLER.setFormatter(FORMATTER)
+LOG.addHandler(HANDLER)
 
 
 def respond(event, context):
