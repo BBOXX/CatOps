@@ -3,6 +3,9 @@
 import requests
 from catops import CatParser, ArgumentParserError
 from bs4 import BeautifulSoup as BSHTML
+import logging
+
+logger = logging.getLogger('slack_logger')
 
 def ping(argv, params):
     """Check is working."""
@@ -15,28 +18,34 @@ def ping(argv, params):
 
 
 def nested(argv, params):
-    """This is an implementation of a nested argument parser. e.g. git --help, git status --help """
+    """This is an implementation of a nested argument parser. e.g. git add, git status, etc. """
     parser = CatParser(
         description='Check plugin loader is working',
         usage='''catops nested test''')
     # take from second argument since are in the 2nd level of the argument parsing.
     parser.add_argument('test')
+    help_msg = parser.format_help()
     try:
-        args = parser.parse_args(argv)
+        args = parser.parse_args(argv[1:])
         payload = {
             'statusCode':'200',
             'text':'args were: {}'.format(argv),
             'response_type':'in_channel',
             'headers':{'Content-Type': 'application/json'}
         }
+        if args.test == 'help':
+            payload['text'] = '{0}\n{1}'.format(
+                payload['text'],
+                help_msg)
+
     except ArgumentParserError as err:
+        msg = '{0}\n{1}'.format(err, help_msg)
         payload = {
             'statusCode':'200',
-            'text':str(err),
+            'text':msg,
             'response_type':'ephemeral',
             'headers':{'Content-Type': 'application/json'}
         }
-
     return payload
 
 
