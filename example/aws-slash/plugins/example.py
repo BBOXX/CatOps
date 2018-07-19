@@ -20,10 +20,11 @@ def ping(argv, params):
 def nested(argv, params):
     """This is an implementation of a nested argument parser. e.g. git add, git status, etc. """
     parser = CatParser(
-        description='Check plugin loader is working',
-        usage='''catops nested test''')
+        description='Check plugin loader is working.',
+        usage='''catops nested test''',
+        add_help=False)
     # take from second argument since are in the 2nd level of the argument parsing.
-    parser.add_argument('test')
+    parser.add_argument('test', help = "Test argument. Enter 'help' to see help message.")
     help_msg = parser.format_help()
     try:
         args = parser.parse_args(argv[1:])
@@ -33,7 +34,8 @@ def nested(argv, params):
             'response_type':'in_channel',
             'headers':{'Content-Type': 'application/json'}
         }
-        if args.test == 'help':
+
+        if args.test != 'test'  or args.test == 'help':
             payload['text'] = '{0}\n{1}'.format(
                 payload['text'],
                 help_msg)
