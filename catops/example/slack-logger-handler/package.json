@@ -1,6 +1,6 @@
 {
-  "name": "CatOps",
-  "description": "Highly trained cats for managing servers.",
+  "name": "CatOpsLogHandler",
+  "description": "Deploys a Lambda function which posts logs to a Slack channel.",
   "repository":"https://github.com/bboxx/CatOps",
   "license":"MIT",
   "version": "0.1.0",
