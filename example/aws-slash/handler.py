@@ -40,8 +40,17 @@ def main(event, context):
         'statusCode':'200',
         'headers':{'Content-Type': 'application/json'}
     }
+    event_text = params.get('text')
     try:
-        retval = dispatch(params.get('text')[0], params)
+        if not event_text:
+            event_text = 'help'
+        elif type(event_text) is list:
+            event_text = event_text[0]
+        elif type(event_text) is str:
+            pass
+        else:
+            event_text = str(event_text)
+        retval = dispatch(event_text, params)
         if type(retval) is str:
             payload['text'] = retval
         elif type(retval) is list: 

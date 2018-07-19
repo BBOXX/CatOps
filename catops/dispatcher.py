@@ -57,7 +57,6 @@ class Dispatcher(object):
         args = parser.parse_args(argv[0:1])
         if args.command == 'help':
             return parser.format_help()
-            
         if not hasattr(self, args.command):
             err = parser.format_help()
             raise ArgumentParserError(err)

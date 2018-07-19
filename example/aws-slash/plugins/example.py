@@ -1,7 +1,7 @@
 """example.py - example plugin for ChatOps."""
 
 import requests
-from catops import CatParser
+from catops import CatParser, ArgumentParserError
 from bs4 import BeautifulSoup as BSHTML
 
 def ping(argv, params):
