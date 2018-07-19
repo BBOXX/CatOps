@@ -46,7 +46,9 @@ class SlackHandler(logging.Handler):
 
 def test():
     # Constants
-    LAMBDA_URL = os.environ['SLACK_LAMBDA_URL']
+    with open('tokens.json', 'r') as stream:
+        TOKENS = json.load(stream)
+    LAMBDA_URL = TOKENS['SlackLambdaURL']
 
     # Create logger
     logger = logging.getLogger('slack_logger')
