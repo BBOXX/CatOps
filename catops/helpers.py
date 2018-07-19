@@ -51,7 +51,7 @@ def convert_dispatch(params, convert_function=None):
         elif type(retval) is list: 
             payload['text'] = json.dumps(retval)
         elif type(retval) is dict:
-            if all(key in retval for key in ['headers', 'statusCode']):
+            if 'statusCode' in retval:
                 payload = retval
             else:
                 payload['text'] = json.dumps(retval)
