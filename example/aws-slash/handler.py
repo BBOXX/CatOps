@@ -4,19 +4,22 @@ import json
 from six.moves.urllib.parse import parse_qs
 import requests
 import boto3
-from catops import dispatch, ArgumentParserError
+from catops import ArgumentParserError, convert_dispatch, get_text, SlackHandler
+import logging
+import yaml
 
+with open("tokens.json", 'r') as stream:
+    TOKENS = json.load(stream)
 
-def make_response(err, res=None):
-    """Make response object for immediate slack response."""
-    if res and (isinstance(res, dict) or isinstance(res, list)):
-        res = json.dumps(res)
-    payload = {
-        'statusCode':'400' if err else '200',
-        'body':err.message if err else res,
-        'headers':{'Content-Type': 'application/json'},
-    }
-    return payload
+LOG = logging.getLogger('catops')
+LOG.setLevel(logging.INFO)
+HANDLER = SlackHandler(TOKENS['SlackOAuthToken'])
+HANDLER.setLevel(logging.INFO)
+FORMAT = '{\
+    "channels":["#bot_tests"],\
+    "time":"%(asctime)s", \ "level":"%(levelname)s", \
+    "message":"%(message)s"}'
+FORMATTER = logging.Formatter(FORMAT)
 
 
 def respond(event, context):
@@ -34,42 +37,22 @@ def respond(event, context):
 def main(event, context):
     """Main lamda function logic, to be called asynchronously."""
     # Print prints logs to cloudwatch
-    print(event)
+    LOG.debug(event)
     params = parse_qs(event.get('body'))
     payload = {
         'statusCode':'200',
         'headers':{'Content-Type': 'application/json'}
     }
-    event_text = params.get('text')
-    try:
-        if not event_text:
-            event_text = 'help'
-        elif type(event_text) is list:
-            event_text = event_text[0]
-        elif type(event_text) is str:
-            pass
-        else:
-            event_text = str(event_text)
-        retval = dispatch(event_text, params)
-        if type(retval) is str:
-            payload['text'] = retval
-        elif type(retval) is list: 
-            payload['text'] = json.dumps(retval)
-        elif type(retval) is dict:
-            if all(key in retval for key in ['headers', 'statusCode']):
-                payload = retval
-            else:
-                payload['text'] = json.dumps(retval)
-        else:
-            payload['text'] = str(retval)
-    except ArgumentParserError as err:
-        payload['text'] = '{0}\n{1}'.format(params.get('text')[0], err)
-    except Exception as err:
-        payload['text'] = 'Kitten dispatch team did not succeed\n{}'.format(err)
+    event_text = get_text(params)
+    payload = convert_dispatch(event_text, params)
+
     # Post to Slack channel
-    r = requests.post(params.get('response_url')[0], data=json.dumps(payload))
+    response_url = params.get('response_url')
+    if type(response_url) is list:
+        response_url = response_url[0]
+    r = requests.post(response_url, data=json.dumps(payload))
     if not r.ok:
-        print(r)
-        print(r.reason)
-        print(r.text)
+        LOG.warning(r)
+        LOG.warning(r.reason)
+        LOG.warning(r.text)
     return
