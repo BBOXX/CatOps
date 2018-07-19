@@ -24,7 +24,6 @@ class Dispatcher(object):
     functions = None    # Dictionary of functions imported from plugins files.
     plugins = None      # Function names.
 
-
     def __init__(self, plugin_dir = 'plugins/'):
         setattr(self,  'meow', meow)
         LOG.info('Loading plugins...')
@@ -44,8 +43,11 @@ class Dispatcher(object):
                 <command> [<args>]
 
                 commands:
-                   {0} 
-            '''.format("\n".join(self.functions.keys()) if self.functions else None))
+                    help
+                    {0} 
+            '''.format("\n                    ".join(self.functions.keys()) if self.functions else ''),
+            add_help=False
+            )
         parser.add_argument('command', help='Subcommand to run')
         return parser
         
@@ -53,8 +55,10 @@ class Dispatcher(object):
         argv = text.split()
         parser = self._create_parser()
         args = parser.parse_args(argv[0:1])
+        if args.command == 'help':
+            return parser.format_help()
         if not hasattr(self, args.command):
-            err = 'Unrecognized command: {}\n{}'.format(args.command, parser.format_help())
+            err = parser.format_help()
             raise ArgumentParserError(err)
         # use dispatch pattern to invoke method with same name
         return getattr(self, args.command)(argv, params)

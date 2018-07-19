@@ -180,3 +180,10 @@ Install `serverless-python-requirements` in the same dir as `serverless.yml`.
   - Execution time limit (5 minute for AWS Lambda)
   - No state (recommend using a cloud-based database for state e.g. DynamoDB for AWS)
 - No autocomplete inside of Slack.
+
+## Slash Commands
+
+## BotUser
+
+1. Enable Event Subscriptions
+2. Bot Users 

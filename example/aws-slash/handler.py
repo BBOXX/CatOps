@@ -4,20 +4,31 @@ import json
 from six.moves.urllib.parse import parse_qs
 import requests
 import boto3
-from catops import dispatch
+from catops import ArgumentParserError, convert_dispatch, get_text, SlackHandler
+import logging
 
+with open('tokens.json', 'r') as stream:
+    TOKENS = json.load(stream)
 
-def make_response(err, res=None):
-    """Make response object for immediate slack response."""
-    if res and (isinstance(res, dict) or isinstance(res, list)):
-        res = json.dumps(res)
-    payload = {
-        'statusCode':'400' if err else '200',
-        'body':err.message if err else res,
-        'headers':{'Content-Type': 'application/json'},
-    }
-    return payload
+LAMBDA_URL = TOKENS['SlackLambdaURL']
 
+# Custom format to print to #catops_logs
+FORMAT = '{\
+    "channels":["#catops_logs"],\
+    "time":"%(asctime)s", \
+    "level":"%(levelname)s", \
+    "message":"%(message)s"}'
+
+# Create LOGGER
+LOGGER = logging.getLogger('slack_logger')
+LOGGER.setLevel(logging.INFO)
+
+# Custom SLACK_HANDLER
+SLACK_HANDLER = SlackHandler(lambda_url=LAMBDA_URL)
+SLACK_HANDLER.setLevel(logging.INFO)
+SLACK_HANDLER.setFormatter(logging.Formatter(FORMAT))
+
+LOGGER.addHandler(SLACK_HANDLER)
 
 def respond(event, context):
     """Call handler.main asynchronously and then return instant response."""
@@ -33,21 +44,22 @@ def respond(event, context):
 
 def main(event, context):
     """Main lamda function logic, to be called asynchronously."""
-    # Print prints logs to cloudwatch
-    print(event)
     params = parse_qs(event.get('body'))
-    try:
-        payload = dispatch(params.get('text')[0], params)
-    except Exception as err:
-        payload = {
-            'statusCode':'200',
-            'text':'Kitten dispatch team did not succeed. {}'.format(err),
-            'headers':{'Content-Type': 'application/json'}
-        }
+    payload = {
+        'statusCode':'200',
+        'headers':{'Content-Type': 'application/json'}
+    }
+    payload = convert_dispatch(params)
+    username =  params.get('user_name', ['catops'])[0] 
+    LOGGER.info('@{0} /catops {1}'.format(username, get_text(params)))
+
     # Post to Slack channel
-    r = requests.post(params.get('response_url')[0], data=json.dumps(payload))
+    response_url = params.get('response_url')
+    if type(response_url) is list:
+        response_url = response_url[0]
+    r = requests.post(response_url, data=json.dumps(payload))
     if not r.ok:
-        print(r)
-        print(r.reason)
-        print(r.text)
+        LOGGER.warning(r)
+        LOGGER.warning(r.reason)
+        LOGGER.warning(r.text)
     return

@@ -1,0 +1,30 @@
+service: CatOpsLogHandler
+
+package:
+  include:
+    - handler.py
+
+custom:
+  pythonRequirements:
+    slim: true
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  runtime: python3.6
+  profile: serverless
+  environment:
+    SlackOAuthToken: ${file(tokens.json):SlackOAuthToken}
+    # SlackOAuthToken: ${env:SLACKOAUTHTOKEN}
+    # SlackBotUserOAuthToken: ${env:SLACKBOTUSEROAUTHTOKEN}
+
+functions:
+  logger: 
+    handler: handler.log
+    events:
+      - http:
+          path: log
+          method: post
+
+plugins:
+  - serverless-python-requirements

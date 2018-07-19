@@ -5,14 +5,13 @@ HELP_MSG = """usage:
                 <command> [<args>]
 
                 commands:
-                   ping\nnested\ncat\ndog 
+                    help
+                    ping\n                    nested\n                    cat\n                    dog 
             
 
 positional arguments:
-  command     Subcommand to run
-
-optional arguments:
-  -h, --help  show this help message and exit\n"""
+  command  Subcommand to run
+"""
 
 
 class DispatcherTest(unittest.TestCase):
@@ -43,11 +42,11 @@ class DispatcherTest(unittest.TestCase):
         try:
             catops.dispatch('hi')
         except catops.parser.ArgumentParserError as err:
-            self.assertEqual('Unrecognized command: hi\n{}'.format(HELP_MSG), str(err))
+            self.assertEqual('{}'.format(HELP_MSG), str(err))
         try:
             self.d.parse_command('hi', self.params)
         except catops.parser.ArgumentParserError as err:
-            self.assertEqual('Unrecognized command: hi\n{}'.format(HELP_MSG), str(err))
+            self.assertEqual('{}'.format(HELP_MSG), str(err))
 
 
 class PluginsTest(unittest.TestCase):

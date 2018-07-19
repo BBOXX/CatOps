@@ -1,0 +1,38 @@
+service: CatOpsBot
+
+package:
+  include:
+    - handler.py
+    - plugins/**
+
+custom:
+  pythonRequirements:
+    slim: true
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  runtime: python3.6
+  profile: serverless
+  environment:
+    SlackOAuthToken: ${file(tokens.json):SlackOAuthToken}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:ListFunctions
+        - lambda:InvokeFunction
+        - lambda:InvokeAsync
+      Resource: "*"
+
+functions:
+  dispatcher:
+    handler: handler.main
+  respond:
+    handler: handler.respond
+    events:
+      - http:
+          path: mention
+          method: post
+
+plugins:
+  - serverless-python-requirements
