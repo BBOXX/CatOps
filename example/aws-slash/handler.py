@@ -7,21 +7,28 @@ import boto3
 from catops import ArgumentParserError, convert_dispatch, get_text, SlackHandler
 import logging
 
-with open("tokens.json", 'r') as stream:
+with open('tokens.json', 'r') as stream:
     TOKENS = json.load(stream)
 
-LOG = logging.getLogger('catops')
-LOG.setLevel(logging.INFO)
-HANDLER = SlackHandler(TOKENS['SlackLambdaURL'])
-HANDLER.setLevel(logging.INFO)
+LAMBDA_URL = TOKENS['SlackLambdaURL']
+
+# Custom format to print to #catops_logs
 FORMAT = '{\
     "channels":["#catops_logs"],\
-    "time":"%(asctime)s", \ "level":"%(levelname)s", \
+    "time":"%(asctime)s", \
+    "level":"%(levelname)s", \
     "message":"%(message)s"}'
-FORMATTER = logging.Formatter(FORMAT)
-HANDLER.setFormatter(FORMATTER)
-LOG.addHandler(HANDLER)
 
+# Create LOGGER
+LOGGER = logging.getLogger('slack_logger')
+LOGGER.setLevel(logging.INFO)
+
+# Custom SLACK_HANDLER
+SLACK_HANDLER = SlackHandler(lambda_url=LAMBDA_URL)
+SLACK_HANDLER.setLevel(logging.INFO)
+SLACK_HANDLER.setFormatter(logging.Formatter(FORMAT))
+
+LOGGER.addHandler(SLACK_HANDLER)
 
 def respond(event, context):
     """Call handler.main asynchronously and then return instant response."""
@@ -37,15 +44,14 @@ def respond(event, context):
 
 def main(event, context):
     """Main lamda function logic, to be called asynchronously."""
-    # Print prints logs to cloudwatch
-    LOG.debug(event)
     params = parse_qs(event.get('body'))
     payload = {
         'statusCode':'200',
         'headers':{'Content-Type': 'application/json'}
     }
     payload = convert_dispatch(params)
-    LOG.info(payload)
+    username =  params.get('user_name', ['catops'])[0] 
+    LOGGER.info('@{0} /catops {1}'.format(username, get_text(params)))
 
     # Post to Slack channel
     response_url = params.get('response_url')
@@ -53,7 +59,7 @@ def main(event, context):
         response_url = response_url[0]
     r = requests.post(response_url, data=json.dumps(payload))
     if not r.ok:
-        LOG.warning(r)
-        LOG.warning(r.reason)
-        LOG.warning(r.text)
+        LOGGER.warning(r)
+        LOGGER.warning(r.reason)
+        LOGGER.warning(r.text)
     return
