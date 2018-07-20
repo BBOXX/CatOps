@@ -16,7 +16,8 @@ positional arguments:
 
 
 class DispatcherTest(unittest.TestCase):
-    params={'user_name':['CatOps']} d = catops.Dispatcher() 
+    params={'user_name':['CatOps']}
+    d = catops.Dispatcher() 
     def test_meow(self):
         answer = {'statusCode':200, 'text':'@CatOps Meow!'}
         self.assertEqual(answer, catops.dispatch('meow'))
