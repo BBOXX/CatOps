@@ -60,7 +60,7 @@ def install(argv=sys.argv):
             if os.path.exists(os.path.join(dir_name, files[i])):
                 print('{} already exists, skipping copy.'.format(file_path))
             else:
-                print('Copying {} into {}'.format(files[i], dir_name))
+                print('Copying {} into {}'.format(file_path, dir_name))
                 copy(file_path, dir_name)
     return 0
 
