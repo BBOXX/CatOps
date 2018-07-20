@@ -8,11 +8,11 @@ def get_slack_colour(level):
     """Return Slack colour value based on log level."""
     level = level.upper()
     colours = {
-        "CRITICAL":"ff0000",
-        "ERROR":"ff9933",
-        "WARNING":"ffcc00",
-        "INFO":"33ccff",
-        "DEBUG":"good"
+        "CRITICAL": "ff0000",
+        "ERROR": "ff9933",
+        "WARNING": "ffcc00",
+        "INFO": "33ccff",
+        "DEBUG": "good"
     }
     return colours.get(level, "good")
 
@@ -35,7 +35,7 @@ def convert_dispatch(params, convert_function=None):
     """Call dispatch and convert the output accordingly into a payload."""
     payload = {
         'statusCode': '200',
-        'headers':{'Content-Type':'application/json'}
+        'headers': {'Content-Type': 'application/json'}
     }
 
     try:
@@ -58,17 +58,17 @@ def convert_dispatch(params, convert_function=None):
         title = 'Invalid command: /catops {0}'.format(event_text)
         msg = err
         payload['attachments'] = [{
-            'title':title,
-            'text':msg,
-            'color':get_slack_colour('WARNING')
+            'title': title,
+            'text': msg,
+            'color': get_slack_colour('WARNING')
         }]
     except Exception as err:
         title = 'Kitten dispatch team failed with command: /catops {}'
         msg = err
         payload['attachments'] = [{
-            'title':title,
-            'text':msg,
-            'color':get_slack_colour('ERROR')
+            'title': title,
+            'text': msg,
+            'color': get_slack_colour('ERROR')
         }]
     return payload
 
