@@ -1,4 +1,4 @@
-import os.path
+import os
 import unittest
 import catops
 
@@ -59,10 +59,15 @@ class ParseTest(unittest.TestCase):
 class InstallTest(unittest.TestCase):
     def test_install(self):
         BASE_DIR = 'test_dir'
-        catops.install(['install', '-t', 'slash_command', '-d', BASE_DIR])
+        catops.install(['meow','install', '-t', 'slash_command', '-d', BASE_DIR])
         files = ['handler.py', 'tokens.json', 'package.json', 'package-lock.json', 'serverless.yml', 'README.md', 'requirements.txt']
         for f in files:
-            self.assertTrue(os.path.isfile('{0}/{1}'.format(BASE_DIR, files)))
+            path = '{0}/{1}'.format(BASE_DIR, f)
+            print('Checking {} exists.'.format(path))
+            self.assertTrue(os.path.isfile(path))
+            os.remove(path)
+        os.rmdir(BASE_DIR)
+        
 
 
 if __name__=="__main__":
