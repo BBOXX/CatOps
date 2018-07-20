@@ -1,9 +1,9 @@
 {
-  "name": "CatOps",
-  "description": "Highly trained cats for managing servers.",
+  "name": "CatOpsSlash",
+  "description": "Deploys Lambda function that acts as a listener for Slack slash commands.",
   "repository":"https://github.com/bboxx/CatOps",
   "license":"MIT",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "dependencies": {},
   "devDependencies": {
     "serverless-python-requirements": "^4.1.0"
