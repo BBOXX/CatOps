@@ -3,7 +3,7 @@ import sys
 import unittest
 import catops
 
-abspath = os.path.abs(__file__)
+abspath = os.path.normpath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 
