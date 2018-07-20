@@ -51,6 +51,14 @@ using the function name.
 - Pay per invocation.
 - Provider agnostic.
 
+## Quick Start
+
+1. Install catops `pip install catops`
+2. Run `meow install [--template] [--target-dir]`
+3. Adjust the template according to your needs e.g. add Slack OAuth tokens, adjust service names etc.
+4. Run `serverless deploy`
+5. Configure your Slack app (i.e. set Slash command/Bot endpoint URLs to appropriate URLs)
+
 ## Example
 
 ### Python handler
