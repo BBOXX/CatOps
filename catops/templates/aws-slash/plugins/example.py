@@ -2,19 +2,14 @@
 
 import requests
 from catops import CatParser, ArgumentParserError
-from bs4 import BeautifulSoup as BSHTML
 import logging
 
 logger = logging.getLogger('slack_logger')
 
 def ping(argv, params):
     """Check is working."""
-    payload = {
-        'statusCode':'200',
-        'text':'@{} Meow!'.format(params.get('user_name', ['CatOps'])[0]),
-        'response_type':'in_channel',
-    }
-    return payload
+    text = '@{} Meow!'.format(params.get('user_name', ['CatOps'])[0]),
+    return text
 
 
 def nested(argv, params):
@@ -55,9 +50,11 @@ def cat(argv, params):
     # Print prints logs to cloudwatch
     # Send response to response url
     caturl = 'http://thecatapi.com/api/images/get?format=xml&size=med&type=jpg,png&results_per_page=1'
+    start = '<url>'
+    end = '</url>'
     catr = requests.get(caturl)
-    parsed_content = BSHTML(catr.content)
-    url = parsed_content.url.contents[0].strip()
+    cattext = catr.text
+    url = (cattext.split(start))[1].split(end)[0] 
 
     payload = {
         'statusCode':'200',

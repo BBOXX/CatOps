@@ -17,7 +17,6 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - lambda:ListFunctions
         - lambda:InvokeFunction
         - lambda:InvokeAsync
       Resource: "*"
