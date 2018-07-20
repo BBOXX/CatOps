@@ -1,4 +1,5 @@
 import os
+import sys
 import unittest
 import catops
 
@@ -10,7 +11,7 @@ HELP_MSG = """usage:
 
                 commands:
                     help
-                    ping\n                    nested\n                    cat\n                    dog 
+                    cat\n                    dog\n                    nested\n                    ping 
             
 
 positional arguments:
@@ -34,7 +35,10 @@ class DispatcherTest(unittest.TestCase):
         try:
             self.d.parse_command('', self.params)
         except catops.parser.ArgumentParserError as err:
-            self.assertEqual('the following arguments are required: command', str(err))
+            if (sys.version_info < (3,6)):
+                self.assertEqual('too few arguments', str(err))
+            else:
+                self.assertEqual('the following arguments are required: command', str(err))
 
 
     def test_invalid_args(self):
