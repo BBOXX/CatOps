@@ -35,7 +35,7 @@ class DispatcherTest(unittest.TestCase):
         try:
             self.d.parse_command('', self.params)
         except catops.parser.ArgumentParserError as err:
-            if (sys.version_info < (3,6)):
+            if (sys.version_info < (3,0)):
                 self.assertEqual('too few arguments', str(err))
             else:
                 self.assertEqual('the following arguments are required: command', str(err))
