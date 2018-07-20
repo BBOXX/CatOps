@@ -2,6 +2,9 @@ import os
 import unittest
 import catops
 
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 HELP_MSG = """usage: 
                 <command> [<args>]
 
