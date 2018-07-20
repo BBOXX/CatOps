@@ -12,7 +12,7 @@ matrix:
     env: TOXENV=py27
 install:
 - pip install tox codecov
-- ls BBOXX/catops
+- ls BBOXX/CatOps/catops
 script:
 - tox
 after_success:
