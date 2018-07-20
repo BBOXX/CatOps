@@ -62,33 +62,30 @@ import requests
 import boto3
 from catops import dispatch
 
+
 def respond(event, context):
     """Call handler.main asynchronously and then return instant response."""
     lambda_client = boto3.client('lambda')
     response = {'statusCode':'200'}
     # Call actual function asynchronously
     lambda_client.invoke(
-        FunctionName='CatOpsAsyncTest-dev-dispatcher',
+        FunctionName='CatOps-dev-dispatcher',
         InvocationType='Event',
         Payload=json.dumps(event))
     return response
 
+
 def main(event, context):
     """Main lamda function logic, to be called asynchronously."""
-    # Print prints logs to cloudwatch
-    print(event)
     params = parse_qs(event.get('body'))
-    try:
-        payload = dispatch(params.get('text')[0], params)
-    except Exception as err:
-        print("Dispatch failed: {}".format(err))
-        payload = {
-            'statusCode':'200',
-            'text':'Kitten dispatch team did not succeed.',
-            'headers':{'Content-Type': 'application/json'}
-        }
+    payload = convert_dispatch(params)
+    username =  params.get('user_name', ['catops'])[0] 
+
     # Post to Slack channel
-    r = requests.post(params.get('response_url')[0], data=json.dumps(payload))
+    response_url = params.get('response_url')
+    if type(response_url) is list:
+        response_url = response_url[0]
+    r = requests.post(response_url, data=json.dumps(payload))
     if not r.ok:
         print(r)
         print(r.reason)
@@ -103,12 +100,8 @@ def main(event, context):
 
 def ping(argv, params):
     """Check is working."""
-    payload = {
-        'statusCode':'200',
-        'text':'@{} Meow!'.format(params.get('user_name', ['CatOps'])[0]),
-        'response_type':'in_channel',
-    }
-    return payload
+    text = '@{} Meow!'.format(params.get('user_name', ['CatOps'])[0]),
+    return text
 ```
 
 ### Serverless configuration
@@ -133,7 +126,6 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - lambda:ListFunctions
         - lambda:InvokeFunction
         - lambda:InvokeAsync
       Resource: "*"

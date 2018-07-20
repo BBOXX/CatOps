@@ -9,12 +9,8 @@ logger = logging.getLogger('slack_logger')
 
 def ping(argv, params):
     """Check is working."""
-    payload = {
-        'statusCode':'200',
-        'text':'@{} Meow!'.format(params.get('user_name', ['CatOps'])[0]),
-        'response_type':'in_channel',
-    }
-    return payload
+    text = '@{} Meow!'.format(params.get('user_name', ['CatOps'])[0]),
+    return text
 
 
 def nested(argv, params):
