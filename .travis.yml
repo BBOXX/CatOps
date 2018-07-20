@@ -13,7 +13,7 @@ matrix:
 install:
 - pip install tox codecov
 - cd $TRAVIS_BUILD_DIR
-- virtualenv -p TOXENV venv
+- virtualenv venv
 - source venv/bin/activate
 - pip install .
 script:
