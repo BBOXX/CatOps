@@ -1,3 +1,4 @@
+import os.path
 import unittest
 import catops
 
@@ -15,10 +16,7 @@ positional arguments:
 
 
 class DispatcherTest(unittest.TestCase):
-    params={'user_name':['CatOps']}
-    d = catops.Dispatcher()
-
-    def test_meow(self):
+    params={'user_name':['CatOps']} d = catops.Dispatcher() def test_meow(self):
         answer = {'statusCode':200, 'text':'@CatOps Meow!'}
         self.assertEqual(answer, catops.dispatch('meow'))
 
@@ -26,11 +24,7 @@ class DispatcherTest(unittest.TestCase):
     def test_no_args(self):
         self.assertRaises(catops.parser.ArgumentParserError, lambda: self.d.parse_command('', self.params))
         self.assertRaises(catops.parser.ArgumentParserError, lambda: catops.dispatch(''))
-        # Test dispatch function
-        try:
-            catops.dispatch('')
-        except catops.parser.ArgumentParserError as err:
-            self.assertEqual('the following arguments are required: command', str(err))
+        # Test dispatch function try: catops.dispatch('') except catops.parser.ArgumentParserError as err: self.assertEqual('the following arguments are required: command', str(err))
         # Test Dispatcher().parse_command function
         try:
             self.d.parse_command('', self.params)
@@ -59,6 +53,14 @@ class ParseTest(unittest.TestCase):
         parser = catops.CatParser(description = 'Check parser raises exception instead of exiting.')
         parser.add_argument('test')
         self.assertRaises(catops.parser.ArgumentParserError, lambda: parser.parse_args([]))
+
+class InstallTest(unittest.TestCase):
+    def test_install(self):
+        BASE_DIR = 'test_dir'
+        catops.install(['install', '-t', 'slash_command', '-d', BASE_DIR])
+        files = ['handler.py', 'tokens.json', 'package.json', 'package-lock.json', 'serverless.yml', 'README.md', 'requirements.txt']
+        for f in files:
+            self.assertTrue(os.path.isfile('{0}/{1}'.format(BASE_DIR, files)))
 
 
 if __name__=="__main__":
