@@ -11,10 +11,10 @@ matrix:
   - python: 2.7
     env: TOXENV=py27
 install:
-- pip install tox codecov
 - cd $TRAVIS_BUILD_DIR
 - virtualenv venv
 - source venv/bin/activate
+- pip install tox codecov
 - pip install .
 script:
 - tox
