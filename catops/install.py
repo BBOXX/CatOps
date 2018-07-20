@@ -1,35 +1,70 @@
+import argparse
 import os
 from shutil import copy
 import sys
 import pkg_resources
+from catops.helpers import retry_valid_input
 
 DATA_PATH = pkg_resources.resource_filename('catops', 'example/')
 
-def install(argv=[]):
+
+def install(argv=sys.argv):
     """Install catops serverless Slack template."""
-    parser = argparse.ArgumentParser(usage='catops template [dir]')
-    parser.add_argument('template', help='Catops template to use. slash_command, slackbot or log_handler.')
+    parser = argparse.ArgumentParser(usage='meow install [--template] [--dir]')
+    parser.add_argument('install', help='Install catops template.')
+
+    parser.add_argument(
+        '-t','--template',
+        action='store',
+        dest='template',
+        default='',
+        help='Catops template to use. slash_command, slackbot or log_handler.')
+
     parser.add_argument(
         '-d', '--dir',
         action='store',
         dest='directory',
-        default='catops_template'
+        default='',
         help='Dir to install into')
 
     templates = ['slash_command', 'slackbot', 'log_handler']
-    args = parser.parse_args(argv)
-    if args.template.lower() in templates:
-        dir_name = args.directory
+    template_dir = {
+        'slash_command':'aws-slash',
+        'slackbot':'aws-bot',
+        'log_handler':'slack-logger'
+    }
+
+    args = parser.parse_args(argv[1:])
+    template = (args.template if args.template.lower() in templates else '') or retry_valid_input(
+            'Enter the name of the serverless template',
+            title='',
+            default='slash_command',
+            condition=lambda x: x in templates
+    )
+
+    dir_name = args.directory or retry_valid_input(
+            'Enter the directory name for your load tests:',
+            title='dir',
+            default='catops_template')
+
+    if template.lower() in templates:
+        print('Installing {0} template into {1}'.format(template, dir_name))
         if not os.path.exists(dir_name):
-            print("Creating directory {}".format(dir_name))
+            print('Creating directory {}'.format(dir_name))
             os.makedirs(dir_name)
         else:
-            print("{} already exists, skipping create directory.".format(dir_name))
+            print('{} already exists, skipping create directory.'.format(dir_name))
         # Copy files into dir
         files = ['handler.py', 'tokens.json', 'package.json', 'package-lock.json', 'serverless.yml', 'README.md', 'requirements.txt']
-        for i, file_path in enumerate(map(lambda f: DATA_PATH + f, files)):
+        for i, file_path in enumerate(map(lambda f: '{0}{1}/{2}'.format(DATA_PATH, template_dir[template], f), files)):
             if os.path.exists(os.path.join(dir_name, files[i])):
-                print("{} already exists, skipping copy.".format(file_path))
+                print('{} already exists, skipping copy.'.format(file_path))
             else:
-                print("Copying {} into {}".format(files[i], dir_name))
+                print('Copying {} into {}'.format(files[i], dir_name))
                 copy(file_path, dir_name)
+    return 0
+
+
+if __name__=='__main__':
+    install(sys.argv)
+

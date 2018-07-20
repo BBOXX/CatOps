@@ -19,7 +19,7 @@ EMAIL = 'info@bboxx.co.uk'
 AUTHOR = 'George Punter'
 REQUIRES_PYTHON = '>=2.7.0'
 VERSION = None
-REQUIRED = []
+REQUIRED = ['requests']
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -89,7 +89,7 @@ setup(
     packages=find_packages(exclude=('tests',)),
     install_requires=REQUIRED,
     # dependency_links=DEPENDENCY_LINKS,
-    package_data={'catops':['example/*']},
+    package_data={'catops':['example/**/*']},
     include_package_data=True,
     license='MIT',
     classifiers=[
@@ -112,7 +112,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'meow = catops:dispatch',
+            'meow = catops.install:install',
         ]
     }
 )
