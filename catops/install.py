@@ -5,7 +5,7 @@ import sys
 import pkg_resources
 from catops.helpers import retry_valid_input
 
-DATA_PATH = pkg_resources.resource_filename('catops', 'example/')
+DATA_PATH = pkg_resources.resource_filename('catops', 'templates/')
 
 
 def install(argv=sys.argv):
@@ -45,7 +45,7 @@ def install(argv=sys.argv):
     dir_name = args.directory or retry_valid_input(
             'Enter the directory name for your load tests:',
             title='dir',
-            default='catops_template')
+            default='{}_template'.format(template))
 
     if template.lower() in templates:
         print('Installing {0} template into {1}'.format(template, dir_name))

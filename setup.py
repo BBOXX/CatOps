@@ -89,7 +89,7 @@ setup(
     packages=find_packages(exclude=('tests',)),
     install_requires=REQUIRED,
     # dependency_links=DEPENDENCY_LINKS,
-    package_data={'catops':['example/**/*']},
+    package_data={'catops':['templates/**/*']},
     include_package_data=True,
     license='MIT',
     classifiers=[
