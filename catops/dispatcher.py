@@ -40,7 +40,7 @@ class Dispatcher(object):
     def _create_parser(self):
         if self.functions:
             func_keys = self.functions.keys()
-            func_keys.sort()
+            func_keys = sorted(list(func_keys))
             command_str = "\n                    ".join(func_keys)
         parser = CatParser(
             usage='''
