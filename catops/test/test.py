@@ -3,9 +3,10 @@ import sys
 import unittest
 import catops
 
-abspath = os.path.abspath(__file__)
+abspath = os.path.abs(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
+
 HELP_MSG = """usage: 
                 <command> [<args>]
 
@@ -62,20 +63,6 @@ class ParseTest(unittest.TestCase):
         parser = catops.CatParser(description = 'Check parser raises exception instead of exiting.')
         parser.add_argument('test')
         self.assertRaises(catops.parser.ArgumentParserError, lambda: parser.parse_args([]))
-
-class InstallTest(unittest.TestCase):
-    def test_install(self):
-        BASE_DIR = 'test_dir'
-        catops.install(['meow','install', '-t', 'slash_command', '-d', BASE_DIR])
-        files = ['handler.py', 'tokens.json', 'package.json', 'package-lock.json', 'serverless.yml', 'README.md', 'requirements.txt']
-        for f in files:
-            path = '{0}/{1}'.format(BASE_DIR, f)
-            print('Checking {} exists.'.format(path))
-            self.assertTrue(os.path.isfile(path))
-            os.remove(path)
-        os.rmdir(BASE_DIR)
-        
-
 
 if __name__=="__main__":
     unittest.main()
