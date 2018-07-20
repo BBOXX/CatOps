@@ -2,7 +2,6 @@
 
 import requests
 from catops import CatParser
-from bs4 import BeautifulSoup as BSHTML
 
 def ping(argv, params):
     """Check is working."""
@@ -34,9 +33,11 @@ def cat(argv, params):
     # Print prints logs to cloudwatch
     # Send response to response url
     caturl = 'http://thecatapi.com/api/images/get?format=xml&size=med&type=jpg,png&results_per_page=1'
+    start = '<url>'
+    end = '</url>'
     catr = requests.get(caturl)
-    parsed_content = BSHTML(catr.content)
-    url = parsed_content.url.contents[0].strip()
+    cattext = catr.text
+    url = (cattext.split(start))[1].split(end)[0] 
 
     payload = {
         'statusCode':'200',
