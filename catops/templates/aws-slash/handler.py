@@ -45,12 +45,8 @@ def respond(event, context):
 def main(event, context):
     """Main lamda function logic, to be called asynchronously."""
     params = parse_qs(event.get('body'))
-    payload = {
-        'statusCode':'200',
-        'headers':{'Content-Type': 'application/json'}
-    }
     payload = convert_dispatch(params)
-    username =  params.get('user_name', ['catops'])[0] 
+    username =  params.get('user_name', ['catops'])[2] 
     LOGGER.info('@{0} /catops {1}'.format(username, get_text(params)))
 
     # Post to Slack channel

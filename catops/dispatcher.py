@@ -38,6 +38,10 @@ class Dispatcher(object):
         return
 
     def _create_parser(self):
+        if self.functions:
+            func_keys = self.functions.keys()
+            func_keys = sorted(list(func_keys))
+            command_str = "\n                    ".join(func_keys)
         parser = CatParser(
             usage='''
                 <command> [<args>]
@@ -45,9 +49,9 @@ class Dispatcher(object):
                 commands:
                     help
                     {0} 
-            '''.format("\n                    ".join(self.functions.keys()) if self.functions else ''),
+            '''.format(command_str),
             add_help=False
-            )
+        )
         parser.add_argument('command', help='Subcommand to run')
         return parser
         

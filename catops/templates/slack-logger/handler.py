@@ -9,7 +9,7 @@ from slacker import Slacker
 with open('tokens.json','r') as stream:
     TOKENS = json.load(stream)
 
-SLACK = Slacker(TOKENS['SlackOAuthToken'])
+SLACK = Slacker(TOKENS['SlackBotOAuthToken'])
 
 def log(event, context):
     """Print logs to Slack (maybe after some processing)"""
