@@ -10,7 +10,7 @@ DATA_PATH = pkg_resources.resource_filename('catops', 'templates/')
 
 def install(argv=sys.argv):
     """Install catops serverless Slack template."""
-    parser = argparse.ArgumentParser(usage='meow install [--template] [--dir]')
+    parser = argparse.ArgumentParser(usage='meow install [--template] [--target-dir]')
     parser.add_argument('install', help='Install catops template.')
 
     parser.add_argument(
@@ -18,20 +18,20 @@ def install(argv=sys.argv):
         action='store',
         dest='template',
         default='',
-        help='Catops template to use. slash_command, slackbot or log_handler.')
+        help='Catops template to use. slash_command, slackbot or slack_logger.')
 
     parser.add_argument(
-        '-d', '--dir',
+        '-d', '--target-dir',
         action='store',
         dest='directory',
         default='',
         help='Dir to install into')
 
-    templates = ['slash_command', 'slackbot', 'log_handler']
+    templates = ['slash_command', 'slackbot', 'slack_logger']
     template_dir = {
         'slash_command':'aws-slash',
         'slackbot':'aws-bot',
-        'log_handler':'slack-logger'
+        'slack_logger':'slack-logger'
     }
 
     args = parser.parse_args(argv[1:])

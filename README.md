@@ -159,7 +159,7 @@ serverless deploy
 serverless invoke --function dispatcher --path /path/to/json/data --log
 ```
 
-See [examples](https://github.com/BBOXX/CatOps/tree/master/catops/example) for more.
+See [examples](https://github.com/BBOXX/CatOps/tree/master/examples) and [templates](https://github.com/BBOXX/CatOps/tree/master/catops/templates) for more.
 
 ## Installation
 
