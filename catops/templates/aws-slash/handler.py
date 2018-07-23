@@ -5,7 +5,7 @@ import logging
 from six.moves.urllib.parse import parse_qs
 import requests
 from catops import ArgumentParserError, convert_dispatch, get_text, SlackHandler
-import boto3.client
+import boto3
 
 with open('tokens.json', 'r') as stream:
     TOKENS = json.load(stream)
@@ -36,6 +36,7 @@ def respond(event, context):
     lambda_client = boto3.client('lambda')
     response = {'statusCode': '200'}
     # Call actual function asynchronously
+    LOGGER.debug("Invoking CatOps dispatcher")
     lambda_client.invoke(
         FunctionName='CatOps-dev-dispatcher',
         InvocationType='Event',
@@ -45,9 +46,13 @@ def respond(event, context):
 
 def main(event, context):
     """Main lambda function logic, to be called asynchronously."""
+    LOGGER.debug("Received invocation from responder")
     params = parse_qs(event.get('body'))
-    payload = convert_dispatch(params)
-    username = params.get('user_name', ['catops'])[2]
+    try:
+        payload = convert_dispatch(params)
+    except Exception as err:
+        LOGGER.error("Error while dispatching: %s", str(err))
+    username = params.get('user_name', ['catops'])[0]
     LOGGER.info('@%s /catops %s', username, get_text(params))
 
     # Post to Slack channel
@@ -59,3 +64,4 @@ def main(event, context):
         LOGGER.warning(response)
         LOGGER.warning(response.reason)
         LOGGER.warning(response.text)
+    return
