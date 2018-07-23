@@ -1,5 +1,7 @@
 """Logging.Handler subclass which posts to AWS Lambda which posts to a Slack channel."""
 from catops import SlackHandler
+import json
+import logging
 
 def test():
     # Constants
