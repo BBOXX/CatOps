@@ -102,4 +102,3 @@ def dispatch(command, params=None):
 
 if __name__ == '__main__':
     dispatch('meow', {'user_name': ['CatOps']})
-

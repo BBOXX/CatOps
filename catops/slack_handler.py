@@ -1,4 +1,4 @@
-"""Logging.Handler subclass which posts to AWS Lambda which posts to a Slack channel."""
+"""Logging.Handler subclass which posts to an AWS Lambda, forwards to Slack."""
 import json
 import logging
 import os
@@ -7,11 +7,11 @@ import requests
 
 class SlackHandler(logging.Handler):
     """Logger slack_handler which posts json log body to lambda_url."""
-    lambda_url = None   # Lambda URL to post log entry to 
+    lambda_url = None   # Lambda URL to post log entry to.
 
     def __init__(self, lambda_url, level=logging.NOTSET):
         super(SlackHandler, self).__init__(level=level)
-        # Default format for this handler, enables json parsing and sending data as json to Lambda function.
+        # enables sending data as json to Lambda function
         DEFAULT_FORMAT = '{\
             "channels":["#bot_tests"],\
             "time":"%(asctime)s", \
@@ -29,10 +29,10 @@ class SlackHandler(logging.Handler):
             return requests.post(
                 self.lambda_url,
                 json={
-                    "channels":dict_entry.get('channels'),
-                    "message":dict_entry.get('message'),
-                    "level":dict_entry.get('level'),
-                    "time":dict_entry.get('time')
+                    "channels": dict_entry.get('channels'),
+                    "message": dict_entry.get('message'),
+                    "level": dict_entry.get('level'),
+                    "time": dict_entry.get('time')
                 },
                 headers={"Content-type": "application/json"}
             )
@@ -43,16 +43,18 @@ class SlackHandler(logging.Handler):
                 log_entry, headers={"Content-type": "application/json"}
             )
 
+
 def test():
+    """Test the slack logger."""
     # Constants
-    LAMBDA_URL = os.environ['SLACK_LAMBDA_URL']
+    lambda_url = os.environ['SLACK_LAMBDA_URL']
 
     # Create logger
     logger = logging.getLogger('slack_logger')
     logger.setLevel(logging.DEBUG)
 
     # Custom slack_handler
-    slack_handler = SlackHandler(lambda_url=LAMBDA_URL)
+    slack_handler = SlackHandler(lambda_url=lambda_url)
     slack_handler.setLevel(logging.DEBUG)
     logger.addHandler(slack_handler)
 
