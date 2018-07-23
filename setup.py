@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""Setup.py for deploying as a pip package and ease of install."""
 
 # Note: To use the 'upload' functionality of this file, you must:
 #   $ pip install twine
@@ -21,20 +22,20 @@ REQUIRES_PYTHON = '>=2.7.0'
 VERSION = None
 REQUIRED = ['requests']
 
-here = os.path.abspath(os.path.dirname(__file__))
+HERE = os.path.abspath(os.path.dirname(__file__))
 
 # Import the README and use it as the long-description.
 # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
-with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = '\n' + f.read()
+with io.open(os.path.join(HERE, 'README.md'), encoding='utf-8') as f:
+    LONG_DESCRIPTION = '\n' + f.read()
 
 # Load the package's __version__.py module as a dictionary.
-about = {}
+ABOUT = {}
 if not VERSION:
-    with open(os.path.join(here, NAME, '__version__.py')) as f:
-        exec(f.read(), about)
+    with open(os.path.join(HERE, NAME, '__version__.py')) as f:
+        exec(f.read(), ABOUT)
 else:
-    about['__version__'] = VERSION
+    ABOUT['__version__'] = VERSION
 
 
 class UploadCommand(Command):
@@ -44,9 +45,9 @@ class UploadCommand(Command):
     user_options = []
 
     @staticmethod
-    def status(s):
+    def status(string):
         """Prints things in bold."""
-        print('\033[1m{0}\033[0m'.format(s))
+        print('\033[1m{0}\033[0m'.format(string))
 
     def initialize_options(self):
         pass
@@ -55,9 +56,10 @@ class UploadCommand(Command):
         pass
 
     def run(self):
+        """Build and upload distribution; push git tags from __version__.py."""
         try:
             self.status('Removing previous builds…')
-            rmtree(os.path.join(here, 'dist'))
+            rmtree(os.path.join(HERE, 'dist'))
         except OSError:
             pass
 
@@ -70,7 +72,7 @@ class UploadCommand(Command):
         os.system('twine upload dist/*')
 
         self.status('Pushing git tags…')
-        os.system('git tag v{0}'.format(about['__version__']))
+        os.system('git tag v{0}'.format(ABOUT['__version__']))
         os.system('git push --tags')
         sys.exit()
 
@@ -78,9 +80,9 @@ class UploadCommand(Command):
 # Where the magic happens:
 setup(
     name=NAME,
-    version=about['__version__'],
+    version=ABOUT['__version__'],
     description=DESCRIPTION,
-    long_description=long_description,
+    long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     author=AUTHOR,
     author_email=EMAIL,
@@ -89,7 +91,7 @@ setup(
     packages=find_packages(exclude=('tests',)),
     install_requires=REQUIRED,
     # dependency_links=DEPENDENCY_LINKS,
-    package_data={'catops':['templates/**/*']},
+    package_data={'catops': ['templates/**/*']},
     include_package_data=True,
     license='MIT',
     classifiers=[

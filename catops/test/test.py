@@ -12,7 +12,7 @@ HELP_MSG = """usage:
 
                 commands:
                     help
-                    cat\n                    dog\n                    nested\n                    ping 
+                    cat\n                    dog\n                    nested\n                    ping
             
 
 positional arguments:

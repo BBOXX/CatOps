@@ -1,13 +1,11 @@
 #/bin/python3
 """Handlers for AWS Lambda."""
 import json
-from six.moves.urllib.parse import parse_qs
-import requests
 import boto3
 from catops import dispatch
 from slacker import Slacker
 
-with open('tokens.json','r') as stream:
+with open('tokens.json', 'r') as stream:
     TOKENS = json.load(stream)
 
 SLACK = Slacker(TOKENS['SlackBotOAuthToken'])
@@ -38,9 +36,9 @@ def respond(event, context):
     challenge = jbody.get('challenge', False)
     if challenge:
         response = make_response(
-                status_code='200',
-                headers={'Content-Type':'application/json'},
-                body=json.dumps({'challenge':challenge}))
+            status_code='200',
+            headers={'Content-Type': 'application/json'},
+            body=json.dumps({'challenge': challenge}))
         print(response)
     else:
         response = make_response('200')
@@ -49,15 +47,14 @@ def respond(event, context):
 
 def main(event, context):
     """Main lamda function logic, to be called asynchronously."""
-    event['event']['text'] = (event['event']['text']).replace('@','')
+    event['event']['text'] = (event['event']['text']).replace('@', '')
     slack_event = event['event']
     channel = slack_event['channel']
 
     if '<UBR4UACE7>' in slack_event['text']:
-        if all(word in slack_event['text'] for word in ['dog','evil']):
-            SLACK.chat.post_message(channel,'Yes, of course.')
-        elif all(word in slack_event['text'] for word in ['cat','evil']):
-            SLACK.chat.post_message(channel,'Don\'t be stupid.')
+        if all(word in slack_event['text'] for word in ['dog', 'evil']):
+            SLACK.chat.post_message(channel, 'Yes, of course.')
+        elif all(word in slack_event['text'] for word in ['cat', 'evil']):
+            SLACK.chat.post_message(channel, 'Don\'t be stupid.')
         else:
             SLACK.chat.post_message('#bot_tests', json.dumps(slack_event))
-

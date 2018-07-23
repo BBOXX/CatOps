@@ -1,11 +1,11 @@
-#/bin/python3
+#!/bin/python3
 """Handlers for AWS Lambda."""
 import json
+import logging
 from six.moves.urllib.parse import parse_qs
 import requests
-import boto3
 from catops import ArgumentParserError, convert_dispatch, get_text, SlackHandler
-import logging
+import boto3
 
 with open('tokens.json', 'r') as stream:
     TOKENS = json.load(stream)
@@ -30,11 +30,13 @@ SLACK_HANDLER.setFormatter(logging.Formatter(FORMAT))
 
 LOGGER.addHandler(SLACK_HANDLER)
 
+
 def respond(event, context):
     """Call handler.main asynchronously and then return instant response."""
     lambda_client = boto3.client('lambda')
-    response = {'statusCode':'200'}
+    response = {'statusCode': '200'}
     # Call actual function asynchronously
+    LOGGER.debug("Invoking CatOps dispatcher")
     lambda_client.invoke(
         FunctionName='CatOps-dev-dispatcher',
         InvocationType='Event',
@@ -43,19 +45,23 @@ def respond(event, context):
 
 
 def main(event, context):
-    """Main lamda function logic, to be called asynchronously."""
+    """Main lambda function logic, to be called asynchronously."""
+    LOGGER.debug("Received invocation from responder")
     params = parse_qs(event.get('body'))
-    payload = convert_dispatch(params)
-    username =  params.get('user_name', ['catops'])[2] 
-    LOGGER.info('@{0} /catops {1}'.format(username, get_text(params)))
+    try:
+        payload = convert_dispatch(params)
+    except Exception as err:
+        LOGGER.error("Error while dispatching: %s", str(err))
+    username = params.get('user_name', ['catops'])[0]
+    LOGGER.info('@%s /catops %s', username, get_text(params))
 
     # Post to Slack channel
     response_url = params.get('response_url')
-    if type(response_url) is list:
+    if isinstance(response_url, list):
         response_url = response_url[0]
-    r = requests.post(response_url, data=json.dumps(payload))
-    if not r.ok:
-        LOGGER.warning(r)
-        LOGGER.warning(r.reason)
-        LOGGER.warning(r.text)
+    response = requests.post(response_url, data=json.dumps(payload))
+    if not response.ok:
+        LOGGER.warning(response)
+        LOGGER.warning(response.reason)
+        LOGGER.warning(response.text)
     return

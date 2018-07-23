@@ -1,5 +1,5 @@
-#/bin/python3
-"""dispatch.py Decode & Dispatch: Parse incoming text into commands and dispatch to appropriate plugin functions."""
+#!/bin/python3
+"""Parse incoming text into commands and dispatch to plugin functions."""
 
 import logging
 from .parser import CatParser, ArgumentParserError
@@ -10,22 +10,41 @@ LOG.setLevel(logging.WARN)
 LOG.addHandler(logging.StreamHandler())
 
 
-def load_plugins(plugin_dir='plugins', ignore_file_prefix='_', include_file_prefix='', ignore_function_prefix='_', include_function_prefix=''):
-    plugin_files = find_plugin_files(plugin_dir, include_file_prefix, ignore_file_prefix)
-    return load_plugin_functions(plugin_files, include_function_prefix, ignore_function_prefix)
+def load_plugins(
+        plugin_dir='plugins',
+        ignore_file_prefix='_',
+        include_file_prefix='',
+        ignore_function_prefix='_',
+        include_function_prefix=''):
+    """Find plugin files and then load (import & return {name: callable}."""
+    # Find files which contain plugins in plugin_dir
+    plugin_files = find_plugin_files(
+        plugin_dir,
+        include_file_prefix,
+        ignore_file_prefix)
+    # Load functions {name: callable} for each valid function in plugin files
+    plugin_functions = load_plugin_functions(
+        plugin_files,
+        include_function_prefix,
+        ignore_function_prefix)
+    return plugin_functions
 
 
 def meow(args=None, params=None):
     """Test function."""
-    return {'statusCode':200, 'text':'@{} Meow!'.format(params.get('user_name')[0])}
+    response = {
+        'statusCode': 200,
+        'text': '@{} Meow!'.format(params.get('user_name')[0])
+    }
+    return response
 
 
 class Dispatcher(object):
     functions = None    # Dictionary of functions imported from plugins files.
     plugins = None      # Function names.
 
-    def __init__(self, plugin_dir = 'plugins/'):
-        setattr(self,  'meow', meow)
+    def __init__(self, plugin_dir='plugins/'):
+        setattr(self, 'meow', meow)
         LOG.info('Loading plugins...')
         self.plugins, self.functions = load_plugins(plugin_dir)
         if not (self.plugins or self.functions):
@@ -48,14 +67,15 @@ class Dispatcher(object):
 
                 commands:
                     help
-                    {0} 
+                    {0}
             '''.format(command_str),
             add_help=False
         )
         parser.add_argument('command', help='Subcommand to run')
         return parser
-        
+
     def parse_command(self, text, params):
+        """Split space separated text into argv, and run parse_args on it"""
         argv = text.split()
         parser = self._create_parser()
         args = parser.parse_args(argv[0:1])
@@ -68,13 +88,17 @@ class Dispatcher(object):
         return getattr(self, args.command)(argv, params)
 
     def get_parser(self):
+        """Return Dispatcher parser"""
         return self._create_parser()
 
 
-def dispatch(command, params={'user_name':['CatOps']}):
-    d = Dispatcher()
-    return d.parse_command(command, params)
+def dispatch(command, params=None):
+    """Create Dispatcher object and run parse_command on (command, params)"""
+    if not params:
+        params = {'user_name': ['CatOps']}
+    dispatcher = Dispatcher()
+    return dispatcher.parse_command(command, params)
+
 
 if __name__ == '__main__':
-    dispatch('meow', {'user_name':['CatOps']})
-
+    dispatch('meow', {'user_name': ['CatOps']})
