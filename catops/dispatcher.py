@@ -45,7 +45,7 @@ class Dispatcher(object):
 
     def __init__(self, plugin_dir='plugins/'):
         setattr(self, 'meow', meow)
-        LOG.info('Loading plugins...')
+        LOG.info('Loading plugins from {}...'.format(plugin_dir))
         self.plugins, self.functions = load_plugins(plugin_dir)
         if not (self.plugins or self.functions):
             LOG.error('No plugins found.')
@@ -58,7 +58,7 @@ class Dispatcher(object):
 
     def _create_parser(self):
         command_str = ""
-        if self.functions:
+        if self.functions is not None:
             func_keys = self.functions.keys()
             func_keys = sorted(list(func_keys))
             command_str = "\n                    ".join(func_keys)
