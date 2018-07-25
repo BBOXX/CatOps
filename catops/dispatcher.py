@@ -11,7 +11,7 @@ LOG.addHandler(logging.StreamHandler())
 
 
 def load_plugins(
-        plugin_dir='plugins',
+        plugin_dir='plugins/',
         ignore_file_prefix='_',
         include_file_prefix='',
         ignore_function_prefix='_',

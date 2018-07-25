@@ -58,7 +58,7 @@ def find_plugin_functions(path, include_prefix='', ignore_prefix='_'):
 
 
 def find_plugin_files(
-        dir_path,
+        dir_path='plugins/',
         include_file_prefix='',
         ignore_file_prefix='_'):
     """Searches the directory at *dir_path* and subdirectories for all
@@ -80,7 +80,7 @@ def find_plugin_files(
                  glob.glob('{}/*.py'.format(dir_path)))
 
     if not filepaths:
-        err = 'No .py files found in "{}"'.format(filepaths)
+        err = 'No .py files found in "{}"'.format(dir_path)
         LOGGER.warning(err)
         return None
 
