@@ -57,6 +57,7 @@ class Dispatcher(object):
         return
 
     def _create_parser(self):
+        command_str = ""
         if self.functions:
             func_keys = self.functions.keys()
             func_keys = sorted(list(func_keys))
