@@ -38,8 +38,8 @@ def convert_dispatch(params, convert_function=None, plugin_dir='plugins/'):
         'headers': {'Content-Type': 'application/json'}
     }
 
+    event_text = get_text(params)
     try:
-        event_text = get_text(params)
         retval = dispatch(event_text, params)
         if convert_function is not None:
             payload = convert_function(retval)
@@ -56,15 +56,15 @@ def convert_dispatch(params, convert_function=None, plugin_dir='plugins/'):
             payload['text'] = str(retval)
     except ArgumentParserError as err:
         title = 'Invalid command: /catops {0}'.format(event_text)
-        msg = err
+        msg = str(err)
         payload['attachments'] = [{
             'title': title,
             'text': msg,
             'color': get_slack_colour('WARNING')
         }]
     except Exception as err:
-        title = 'Kitten dispatch team failed with command: /catops {}'
-        msg = err
+        title = 'Kitten dispatch team failed with command: /catops {}'.format(event_text)
+        msg = str(err)
         payload['attachments'] = [{
             'title': title,
             'text': msg,
