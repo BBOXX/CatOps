@@ -11,7 +11,7 @@ LOG.addHandler(logging.StreamHandler())
 
 
 def load_plugins(
-        plugin_dir='plugins',
+        plugin_dir='plugins/',
         ignore_file_prefix='_',
         include_file_prefix='',
         ignore_function_prefix='_',
@@ -45,7 +45,7 @@ class Dispatcher(object):
 
     def __init__(self, plugin_dir='plugins/'):
         setattr(self, 'meow', meow)
-        LOG.info('Loading plugins...')
+        LOG.info('Loading plugins from {}...'.format(plugin_dir))
         self.plugins, self.functions = load_plugins(plugin_dir)
         if not (self.plugins or self.functions):
             LOG.error('No plugins found.')
@@ -57,7 +57,8 @@ class Dispatcher(object):
         return
 
     def _create_parser(self):
-        if self.functions:
+        command_str = ""
+        if self.functions is not None:
             func_keys = self.functions.keys()
             func_keys = sorted(list(func_keys))
             command_str = "\n                    ".join(func_keys)
@@ -92,11 +93,11 @@ class Dispatcher(object):
         return self._create_parser()
 
 
-def dispatch(command, params=None):
+def dispatch(command, params=None, plugin_dir='plugins/'):
     """Create Dispatcher object and run parse_command on (command, params)"""
     if not params:
         params = {'user_name': ['CatOps']}
-    dispatcher = Dispatcher()
+    dispatcher = Dispatcher(plugin_dir=plugin_dir)
     return dispatcher.parse_command(command, params)
 
 
