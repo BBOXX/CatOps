@@ -31,7 +31,7 @@ def get_text(params):
     return event_text
 
 
-def convert_dispatch(params, convert_function=None):
+def convert_dispatch(params, convert_function=None, plugin_dir='plugins/'):
     """Call dispatch and convert the output accordingly into a payload."""
     payload = {
         'statusCode': '200',

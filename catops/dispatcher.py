@@ -93,11 +93,11 @@ class Dispatcher(object):
         return self._create_parser()
 
 
-def dispatch(command, params=None):
+def dispatch(command, params=None, plugin_dir='plugins/'):
     """Create Dispatcher object and run parse_command on (command, params)"""
     if not params:
         params = {'user_name': ['CatOps']}
-    dispatcher = Dispatcher()
+    dispatcher = Dispatcher(plugin_dir=plugin_dir)
     return dispatcher.parse_command(command, params)
 
 
