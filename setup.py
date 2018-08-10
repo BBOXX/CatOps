@@ -20,7 +20,7 @@ EMAIL = 'info@bboxx.co.uk'
 AUTHOR = 'George Punter'
 REQUIRES_PYTHON = '>=2.7.0'
 VERSION = None
-REQUIRED = ['requests', 'slacker']
+REQUIRED = ['requests', 'six', 'slacker']
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 

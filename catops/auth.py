@@ -2,7 +2,7 @@
 import hashlib
 import hmac
 import time
-from urllib.parse import parse_qs
+from six.moves.urllib.parse import parse_qs
 from slacker import Slacker
 
 
