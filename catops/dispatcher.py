@@ -39,13 +39,14 @@ def meow(args=None, params=None):
     return response
 
 
-class Dispatcher(object):
+class Dispatcher():
+    """Class which maps text commands to imported functions"""
     functions = None    # Dictionary of functions imported from plugins files.
     plugins = None      # Function names.
 
     def __init__(self, plugin_dir='plugins/'):
         setattr(self, 'meow', meow)
-        LOG.info('Loading plugins from {}...'.format(plugin_dir))
+        LOG.info('Loading plugins from %s...', plugin_dir)
         self.plugins, self.functions = load_plugins(plugin_dir)
         if not (self.plugins or self.functions):
             LOG.error('No plugins found.')
