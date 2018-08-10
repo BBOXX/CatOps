@@ -62,14 +62,18 @@ using the function name.
 
 ## Example
 
-### Python handler
+### Handler
+
+Every Lambda function needs a handler, which takes arguments `(event, context)`. In this case, it is necessary to respond instantly to the request with a `200` so the handler below calls the actual functionality asynchronously and then returns a `200` response.
+
+#### Example Handler
 
 ```python handler.py
 import json
 from six.moves.urllib.parse import parse_qs
 import requests
 import boto3
-from catops import dispatch
+from catops import convert_dispatch
 
 
 def respond(event, context):
@@ -102,15 +106,28 @@ def main(event, context):
     return
 ```
 
-### Example plugin
+### Plugins
+
+CatOps works around plugins.
+
+- Plugins are python files stored in the 'plugins/' directory.
+- CatOps scans this directory for valid functions to import.
+- All files and/or functions starting with `_` are ignored. (`_` means they are private and will not be added to the CatOps dispatcher)
+- Other functions are added to the CatOps dispatcher and can be called via `/catops <functionname> [argv]`
+- All functions need to have the arguments `(argv, params)`
+    - argv will contain the arguments passed to the function e.g. for `/catops role --user t.user`, argv will contain `['role', '--user', 't.user']
+    - params will contain the parse Lambda event body, which contains all the information from Slack e.g. `{"text": ... , "username": ..., "response_url": ...}`.
+
+#### Example plugin
 
 ```python plugins/example.py
 """example.py - example plugin for ChatOps."""
+from catops import create_slack_payload
 
 def ping(argv, params):
     """Check is working."""
     text = '@{} Meow!'.format(params.get('user_name', ['CatOps'])[0]),
-    return text
+    return create_slack_payload(text=text)
 ```
 
 ### Serverless configuration
@@ -132,6 +149,9 @@ provider:
   stage: ${opt:stage, 'dev'}
   runtime: python3.6
   profile: serverless
+  # Permissions for the lambda function
+  # If using boto3, ensure correct permissions
+  # have been granted to the lambda function
   iamRoleStatements:
     - Effect: Allow
       Action:
