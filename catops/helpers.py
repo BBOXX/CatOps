@@ -31,7 +31,7 @@ def get_text(params):
     return event_text
 
 
-def create_slack_attachment(fallback=None,
+def create_slack_attachment(fallback,
                             color=None,
                             pretext=None,
                             author_name=None,
@@ -68,8 +68,6 @@ def create_slack_attachment(fallback=None,
         [ts] - timestamp
     """
     arguments = locals()  # Must be first line in function
-    if fallback is None or not isinstance(fallback, str):
-        raise ValueError("Attachmen fallback must be present and a str")
     attachment = {
         key: value
         for key, value in arguments.items()
