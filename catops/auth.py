@@ -58,7 +58,7 @@ def get_user_slack(event, oauth, team_id=None, channel_id=None):
                 'id': user.get('id'),
                 'username': user.get('name'),
                 'team_id': user.get('team_id'),
-                'channel_id': user.get('channel_id'),
+                'channel_id': pbody.get('channel_id'),
                 'email': user['profile'].get('email')
             }
     username = pbody.get('user_name')[0]
