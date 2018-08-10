@@ -2,8 +2,10 @@
 """Handlers for AWS Lambda."""
 import datetime
 import json
-
-from catops import get_slack_colour
+from catops import (
+    get_slack_colour,
+    create_slack_attachment
+)
 from slacker import Slacker
 
 with open('tokens.json', 'r') as stream:
@@ -38,12 +40,12 @@ def log(event, context):
         SLACK.chat.post_message(
             channel,
             attachments=[
-                {
-                    "text": "",
-                    "fallback": body,
-                    "author_name": "CatOpsLogHandler",
-                    "color": get_slack_colour(level),
-                    "fields": [
+                create_slack_attachment(
+                    text="",
+                    fallback=body,
+                    author_name="CatOpsLogHandler",
+                    color=get_slack_colour(level),
+                    fields=[
                         {
                             "title": "Message",
                             "value": message,
@@ -65,4 +67,4 @@ def log(event, context):
                             "short": True
                         },
                     ]
-                }])
+                )])

@@ -31,45 +31,108 @@ def get_text(params):
     return event_text
 
 
-def convert_dispatch(params, convert_function=None, plugin_dir='plugins/'):
-    """Call dispatch and convert the output accordingly into a payload."""
+def create_slack_attachment(fallback,
+                            color=None,
+                            pretext=None,
+                            author_name=None,
+                            author_link=None,
+                            author_icon=None,
+                            title=None,
+                            title_link=None,
+                            text=None,
+                            fields=None,
+                            image_url=None,
+                            thumb_url=None,
+                            footer=None,
+                            footer_icon=None,
+                            ts=None
+    ):
+    """Create slack attachment payload
+    See https://api.slack.com/docs/message-attachments for more info.
+    
+    Arguments:
+        fallback - Required plain-text summary of the attachment
+        [color] - Colour of the attachment
+        [pretext] - Optional text that appears above the attachment block
+        [author_name]
+        [author_link]
+        [author_icon] - URL to author icon
+        [title] - Title of the attachment
+        [title_link]
+        [text] - Optional text that appears inside the attachment
+        [fields] - Array of dicts containing more values
+        [image_url] - URL to image attached
+        [thumb_url] - URL to image thumbnail
+        [footer] - Footer message
+        [footer_icon] - URL to footer icon
+        [ts] - timestamp
+    """
+    arguments = locals()  # Must be first line in function
+    attachment = {
+        key: value
+        for key, value in arguments.items()
+        if value is not None
+    }
+    return attachment
+    
+
+def create_slack_payload(response_type='ephemeral', text="", attachments=None):
+    """Create a Slack payload formatted correctly."""
     payload = {
         'statusCode': '200',
-        'headers': {'Content-Type': 'application/json'}
+        'headers': {'Content-Type': 'application/json'},
+        'response_type': response_type,
+        'text': text
     }
+    if attachments is not None:
+        if isinstance(attachments, dict):
+            attachments = [attachments]
+        payload['attachments'] = attachments
+    return payload
 
+
+def create_slack_error_payload(title, msg, color):
+    attachment = create_slack_attachment(
+        fallback="msg",
+        title=title,
+        text=msg,
+        color=get_slack_colour('WARNING')
+    )
+    err_payload = create_slack_payload(
+        response_type='ephemeral',
+        attachments=[attachment]
+    )
+    return err_payload
+
+
+def convert_dispatch(params, convert_function=None, plugin_dir='plugins/'):
+    """Call dispatch and convert the output accordingly into a payload."""
     event_text = get_text(params)
+    payload = create_slack_payload('in_channel', text="ERR: Payload didn't get overwritten")
     try:
         retval = dispatch(event_text, params)
+        # If retval isn't correctly formatted, make it so
         if convert_function is not None:
             payload = convert_function(retval)
         elif isinstance(retval, str):
-            payload['text'] = retval
+            payload = create_slack_payload('in_channel', retval)
         elif isinstance(retval, list):
-            payload['text'] = json.dumps(retval)
+            payload = create_slack_payload('in_channel', json.dumps(retval))
         elif isinstance(retval, dict):
             if 'statusCode' in retval:
                 payload = retval
             else:
-                payload['text'] = json.dumps(retval)
+                payload = create_slack_payload('in_channel', json.dumps(retval))
         else:
-            payload['text'] = str(retval)
+            payload = create_slack_payload('in_channel', str(retval))
     except ArgumentParserError as err:
         title = 'Invalid command: /catops {0}'.format(event_text)
         msg = str(err)
-        payload['attachments'] = [{
-            'title': title,
-            'text': msg,
-            'color': get_slack_colour('WARNING')
-        }]
+        return create_slack_error_payload(title, msg, get_slack_colour('WARNING'))
     except Exception as err:
         title = 'Kitten dispatch team failed with command: /catops {}'.format(event_text)
         msg = str(err)
-        payload['attachments'] = [{
-            'title': title,
-            'text': msg,
-            'color': get_slack_colour('ERROR')
-        }]
+        return create_slack_error_payload(title, msg, get_slack_colour('ERROR'))
     return payload
 
 
