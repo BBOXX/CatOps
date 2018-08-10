@@ -93,6 +93,7 @@ def create_slack_payload(response_type='ephemeral', text="", attachments=None):
 
 def create_slack_error_payload(title, msg, color):
     attachment = create_slack_attachment(
+        fallback="msg",
         title=title,
         text=msg,
         color=get_slack_colour('WARNING')
@@ -107,6 +108,7 @@ def create_slack_error_payload(title, msg, color):
 def convert_dispatch(params, convert_function=None, plugin_dir='plugins/'):
     """Call dispatch and convert the output accordingly into a payload."""
     event_text = get_text(params)
+    payload = create_slack_payload('in_channel', text="ERR: Payload didn't get overwritten")
     try:
         retval = dispatch(event_text, params)
         # If retval isn't correctly formatted, make it so
