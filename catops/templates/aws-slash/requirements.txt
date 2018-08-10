@@ -1,5 +1,5 @@
 boto3
-catops>=0.1.7
+catops>=0.1.9
 requests
 six
 

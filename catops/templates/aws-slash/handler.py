@@ -4,7 +4,15 @@ import json
 import logging
 from six.moves.urllib.parse import parse_qs
 import requests
-from catops import ArgumentParserError, convert_dispatch, get_text, SlackHandler
+from catops import (
+    ArgumentParserError,
+    convert_dispatch,
+    get_text,
+    SlackHandler,
+    verify_request,
+    get_user_slack
+)
+
 import boto3
 
 with open('tokens.json', 'r') as stream:
@@ -27,8 +35,12 @@ LOGGER.setLevel(logging.INFO)
 SLACK_HANDLER = SlackHandler(lambda_url=LAMBDA_URL)
 SLACK_HANDLER.setLevel(logging.INFO)
 SLACK_HANDLER.setFormatter(logging.Formatter(FORMAT))
+# Stream handler
+STREAM_HANDLER = logging.StreamHandler()
+STREAM_HANDLER.setLevel(logging.DEBUG)
 
 LOGGER.addHandler(SLACK_HANDLER)
+LOGGER.addHandler(STREAM_HANDLER)
 
 
 def respond(event, context):
