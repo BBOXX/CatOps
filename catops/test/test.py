@@ -64,5 +64,79 @@ class ParseTest(unittest.TestCase):
         parser.add_argument('test')
         self.assertRaises(catops.parser.ArgumentParserError, lambda: parser.parse_args([]))
 
+
+class SlackPayload(unittest.TestCase):
+    def test_create_payload(self):
+        test_payload = {
+            'statusCode': '200',
+            'headers': {'Content-Type': 'application/json'},
+            'response_type': 'in_channel',
+            'text': 'hullo friend'
+        }
+        payload = catops.create_slack_payload(
+            'in_channel',
+            text='hullo friend'
+        )
+        self.assertEqual(payload, test_payload)
+    def test_create_attachment(self):
+        test_attachment = {
+            "fallback": "Required plain-text summary of the attachment.",
+            "color": "#2eb886",
+            "pretext": "Optional text that appears above the attachment block",
+            "author_name": "Bobby Tables",
+            "author_link": "http://flickr.com/bobby/",
+            "author_icon": "http://flickr.com/icons/bobby.jpg",
+            "title": "Slack API Documentation",
+            "title_link": "https://api.slack.com/",
+            "text": "Optional text that appears within the attachment",
+            "fields": [
+                {
+                    "title": "Priority",
+                    "value": "High",
+                    "short": False
+                }
+            ],
+            "image_url": "http://my-website.com/path/to/image.jpg",
+            "thumb_url": "http://example.com/path/to/thumb.png",
+            "footer": "Slack API",
+            "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+            "ts": 123456789
+        }
+        attachment = catops.create_slack_attachment(
+            fallback = "Required plain-text summary of the attachment.",
+            color = "#2eb886",
+            pretext = "Optional text that appears above the attachment block",
+            author_name = "Bobby Tables",
+            author_link = "http://flickr.com/bobby/",
+            author_icon = "http://flickr.com/icons/bobby.jpg",
+            title = "Slack API Documentation",
+            title_link = "https://api.slack.com/",
+            text = "Optional text that appears within the attachment",
+            fields = [
+                {
+                    "title": "Priority",
+                    "value": "High",
+                    "short": False
+                }
+            ],
+            image_url = "http://my-website.com/path/to/image.jpg",
+            thumb_url = "http://example.com/path/to/thumb.png",
+            footer = "Slack API",
+            footer_icon = "https://platform.slack-edge.com/img/default_application_icon.png",
+            ts = 123456789
+        )
+        self.assertEqual(test_attachment, attachment)
+        test_payload = {
+            'statusCode': '200',
+            'headers': {'Content-Type': 'application/json'},
+            'response_type': 'in_channel',
+            'attachments': [test_attachment],
+            'text': ''
+        }
+        payload = catops.create_slack_payload('in_channel', attachments=attachment)
+        self.assertEqual(test_payload, payload)
+
+
+
 if __name__=="__main__":
     unittest.main()
