@@ -123,6 +123,10 @@ def convert_dispatch(params, convert_function=None, plugin_dir='plugins/'):
                 payload = retval
             else:
                 payload = create_slack_payload('in_channel', json.dumps(retval))
+        elif retval == None:
+            return None
+        elif isinstance(retval, bool):
+            return retval
         else:
             payload = create_slack_payload('in_channel', str(retval))
     except ArgumentParserError as err:
