@@ -20,6 +20,29 @@ positional arguments:
 """
 
 
+class DispatchTest(unittest.TestCase):
+    def test_include_functions(self):
+        self.assertEqual(
+            True,
+            bool(catops.dispatch(command='cat', include_functions=['cat']))
+        )
+
+        self.assertRaises(
+            catops.parser.ArgumentParserError,
+            lambda: catops.dispatch(command='dog', include_functions=['cat'])
+        )
+
+    def test_convert_dispatch(self):
+        self.assertEqual(
+            'Meow meow.',
+            catops.convert_dispatch({'text':'cat'}, include_functions=['cat'])['attachments'][0]['fallback']
+        )
+        title='Invalid command: /catops dog'
+        self.assertEqual(
+            title,
+            catops.convert_dispatch({'text':'dog'}, include_functions=['cat'])['attachments'][0]['title']
+        )
+
 class DispatcherTest(unittest.TestCase):
     params={'user_name':['CatOps']}
     d = catops.Dispatcher() 
