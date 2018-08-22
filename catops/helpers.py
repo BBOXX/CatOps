@@ -105,12 +105,15 @@ def create_slack_error_payload(title, msg, color):
     return err_payload
 
 
-def convert_dispatch(params, convert_function=None, plugin_dir='plugins/'):
+def convert_dispatch(params,
+                     convert_function=None,
+                     include_functions=[],
+                     plugin_dir='plugins/'):
     """Call dispatch and convert the output accordingly into a payload."""
     event_text = get_text(params)
     payload = create_slack_payload('in_channel', text="ERR: Payload didn't get overwritten")
     try:
-        retval = dispatch(event_text, params)
+        retval = dispatch(event_text, params, include_functions=include_functions, plugin_dir=plugin_dir)
         # If retval isn't correctly formatted, make it so
         if convert_function is not None:
             payload = convert_function(retval)

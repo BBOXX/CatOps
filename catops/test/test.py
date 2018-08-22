@@ -23,10 +23,10 @@ positional arguments:
 class DispatcherTest(unittest.TestCase):
     params={'user_name':['CatOps']}
     d = catops.Dispatcher() 
+
     def test_meow(self):
         answer = {'statusCode':200, 'text':'@CatOps Meow!'}
         self.assertEqual(answer, catops.dispatch('meow'))
-
 
     def test_no_args(self):
         self.assertRaises(catops.parser.ArgumentParserError, lambda: self.d.parse_command('', self.params))
@@ -57,6 +57,17 @@ class PluginsTest(unittest.TestCase):
     def test_plugins(self):
         catops.Dispatcher(plugin_dir = 'plugins/')
 
+    def test_include_functions(self):
+        d1 = catops.Dispatcher(include_functions=['cat'])
+        self.assertTrue(
+            'dog' not in d1.functions and
+            'cat' in d1.functions
+        )
+        d2 = catops.Dispatcher(include_functions=['dog'])
+        self.assertTrue(
+            'dog' in d2.functions and
+            'cat' not in d2.functions
+        )
 
 class ParseTest(unittest.TestCase):
     def test_exception(self):
