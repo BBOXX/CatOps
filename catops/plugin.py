@@ -9,7 +9,7 @@ import os
 LOGGER = logging.getLogger(__name__)
 
 
-def find_plugin_functions(path, include_prefix='', ignore_prefix='_'):
+def find_plugin_functions(path, include_functions=[], ignore_prefix='_'):
     """
     Import given path and return (docstring, callables) of all functions.
 
@@ -43,15 +43,15 @@ def find_plugin_functions(path, include_prefix='', ignore_prefix='_'):
         sys.path.insert(index + 1, directory)
         del sys.path[0]
 
-    def is_function(tup, incl=include_prefix, ign=ignore_prefix):
+    def is_function(tup):
         """
         Takes (name, object) tuple, returns True if it's a function.
         """
         name, item = tup
         return bool(
             inspect.isfunction(item)
-            and not name.startswith(ign)
-            and name.startswith(incl)
+            and not name.startswith(ignore_prefix)
+            and (name in include_functions if include_functions else True)
         )
     functions = dict(filter(is_function, vars(imported).items()))
     return imported.__doc__, functions
@@ -96,7 +96,7 @@ def find_plugin_files(
     return plugin_files
 
 
-def load_plugin_functions(filepaths, include_prefix='', ignore_prefix='_'):
+def load_plugin_functions(filepaths, include_functions=[], ignore_prefix='_'):
     """Return doc list and dict containing {name:callable} for each function"""
     functions = {}
     docs = []
@@ -110,7 +110,7 @@ def load_plugin_functions(filepaths, include_prefix='', ignore_prefix='_'):
         LOGGER.info('Checking %s', filepath)
         doc, function = find_plugin_functions(
             filepath,
-            include_prefix=include_prefix,
+            include_functions=include_functions,
             ignore_prefix=ignore_prefix)
         functions.update(function)
         docs.append(doc)

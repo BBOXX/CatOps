@@ -15,7 +15,7 @@ def load_plugins(
         ignore_file_prefix='_',
         include_file_prefix='',
         ignore_function_prefix='_',
-        include_function_prefix=''):
+        include_functions=[]):
     """Find plugin files and then load (import & return {name: callable}."""
     # Find files which contain plugins in plugin_dir
     plugin_files = find_plugin_files(
@@ -24,9 +24,9 @@ def load_plugins(
         ignore_file_prefix)
     # Load functions {name: callable} for each valid function in plugin files
     plugin_functions = load_plugin_functions(
-        plugin_files,
-        include_function_prefix,
-        ignore_function_prefix)
+        filepaths=plugin_files,
+        include_functions=include_functions,
+        ignore_prefix=ignore_function_prefix)
     return plugin_functions
 
 
@@ -44,10 +44,12 @@ class Dispatcher():
     functions = None    # Dictionary of functions imported from plugins files.
     plugins = None      # Function names.
 
-    def __init__(self, plugin_dir='plugins/'):
+    def __init__(self, include_functions=[], plugin_dir='plugins/'):
         setattr(self, 'meow', meow)
         LOG.info('Loading plugins from %s...', plugin_dir)
-        self.plugins, self.functions = load_plugins(plugin_dir)
+        self.plugins, self.functions = load_plugins(
+            include_functions=include_functions,
+            plugin_dir=plugin_dir)
         if not (self.plugins or self.functions):
             LOG.error('No plugins found.')
             return
@@ -94,13 +96,16 @@ class Dispatcher():
         return self._create_parser()
 
 
-def dispatch(command, params=None, plugin_dir='plugins/'):
+def dispatch(command,
+             params=None,
+             include_functions=[],
+             plugin_dir='plugins/'):
     """Create Dispatcher object and run parse_command on (command, params)"""
     if not params:
         params = {'user_name': ['CatOps']}
-    dispatcher = Dispatcher(plugin_dir=plugin_dir)
+    dispatcher = Dispatcher(include_functions=include_functions, plugin_dir=plugin_dir)
     return dispatcher.parse_command(command, params)
 
 
 if __name__ == '__main__':
-    dispatch('meow', {'user_name': ['CatOps']})
+    dispatch('meow', params={'user_name': ['CatOps']})
