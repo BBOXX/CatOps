@@ -203,8 +203,15 @@ def get_user_slack(event, oauth, team_id=None, channel_id=None):
     """
 
 # dispatcher.py
-def dispatch(command, params=None, plugin_dir='plugins/'):
-    """Create Dispatcher object and run parse_command on (command, params)"""
+def dispatch(command, params=None, include_functions=[], plugin_dir='plugins/'):
+    """Create Dispatcher object and run parse_command on (command, params)
+    
+    Arguments:
+        command (str) - Command str e.g. `script arg1 arg2` 
+        [params] (dict) - Additional parameters e.g. username, auth level, etc.
+        [include_functions] - If not empty, only import functions with names in this list.
+        [plugin_dir] - Import files and functions from this directory
+    """
  
 # helpers.py
 def get_slack_colour(level):
@@ -254,7 +261,13 @@ def create_slack_payload(response_type='ephemeral', text="", attachments=None):
     """Create a Slack payload formatted correctly."""
 
 def convert_dispatch(params, convert_function=None, plugin_dir='plugins/'):
-    """Call dispatch and convert the output accordingly into a payload."""
+    """Call dispatch and convert the output accordingly into a payload.
+
+    Arguments:
+        params - Slack payload body.get('text') i.e. command string
+        [include_functions] - If not empty, only import functions with names in this list.
+        [plugin_dir] - Import files and functions from this directory
+    """
 
 # slack_handler.py
 
