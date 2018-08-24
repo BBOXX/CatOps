@@ -100,7 +100,14 @@ def dispatch(command,
              params=None,
              include_functions=[],
              plugin_dir='plugins/'):
-    """Create Dispatcher object and run parse_command on (command, params)"""
+    """Create Dispatcher object and run parse_command on (command, params)
+    
+    Arguments:
+        command (str) - Command str e.g. `script arg1 arg2` 
+        [params] (dict) - Additional parameters e.g. username, auth level, etc.
+        [include_functions] - If not empty, only import functions with names in this list.
+        [plugin_dir] - Import files and functions from this directory
+    """
     if not params:
         params = {'user_name': ['CatOps']}
     dispatcher = Dispatcher(include_functions=include_functions, plugin_dir=plugin_dir)

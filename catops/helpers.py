@@ -109,7 +109,13 @@ def convert_dispatch(params,
                      convert_function=None,
                      include_functions=[],
                      plugin_dir='plugins/'):
-    """Call dispatch and convert the output accordingly into a payload."""
+    """Call dispatch and convert the output accordingly into a payload.
+
+    Arguments:
+        params - Slack payload body.get('text') i.e. command string
+        [include_functions] - If not empty, only import functions with names in this list.
+        [plugin_dir] - Import files and functions from this directory
+    """
     event_text = get_text(params)
     payload = create_slack_payload('in_channel', text="ERR: Payload didn't get overwritten")
     try:
